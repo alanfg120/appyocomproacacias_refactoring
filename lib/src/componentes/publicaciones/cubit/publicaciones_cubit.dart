@@ -1,3 +1,4 @@
+import 'package:appyocomproacacias_refactoring/src/componentes/inicio/models/notificacion.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/data/publicaciones.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/cometario.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/imageFile.model.dart';
@@ -10,13 +11,15 @@ import 'package:appyocomproacacias_refactoring/src/recursos/shared.service.dart'
 import 'package:bloc/bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 part 'publicaciones_state.dart';
 
 class PublicacionesCubit extends Cubit<PublicacionesState> {
+
   final PublicacionesRepositorio repositorio;
   final PreferenciasUsuario prefs;
-  PublicacionesCubit({required this.repositorio, required this.prefs})
+  PublicacionesCubit({Key? key,required this.repositorio, required this.prefs})
       : super(PublicacionesState.initial());
 
   Future<void> getInitiData() async {
@@ -58,11 +61,10 @@ class PublicacionesCubit extends Cubit<PublicacionesState> {
         if (isEmpresa) {
           final index = _getIndexPublicacion(publicacion.id!, true);
           emit(state.copyWith(
-               publicacionesByEmpresa: List.of(state.publicaciones)
-            ..removeAt(index)
-            ..insert(index, publicacion),
-            loadingAdd: false
-          ));
+              publicacionesByEmpresa: List.of(state.publicaciones)
+                ..removeAt(index)
+                ..insert(index, publicacion),
+              loadingAdd: false));
           _updatePublicacionList(publicacion);
         }
         if (!isEmpresa) {
@@ -171,16 +173,21 @@ class PublicacionesCubit extends Cubit<PublicacionesState> {
   }
 
 
- Future getPublicacionById(int idPublicacion) async {
-   emit(state.copyWith(loading: true));
-   final response = await repositorio.getPublicacionById(idPublicacion);
-   if(response is ResponsePublicaciones){
-     emit(state.copyWith(publicacion: response.publicacion,loading: false));
-   }
-   if(response is ErrorResponseHttp){
-    print(response.getError);
-   }
- }
+  tabChangePagina(int pagina)  => emit(state.copyWith(pagina: pagina));
+
+  Future getPublicacionById(int idPublicacion, NotificacionTipo tipo) async {
+    emit(state.copyWith(loading: true));
+    final response = await repositorio.getPublicacionById(idPublicacion);
+    if (response is ResponsePublicaciones) {
+      emit(state.copyWith(
+          publicacion: response.publicacion,
+          loading: false,
+          pagina: _getPagina(tipo)));
+    }
+    if (response is ErrorResponseHttp) {
+      print(response.getError);
+    }
+  }
 
   _addlike(Usuario usuario, bool isEmpresa, int idPublicacion) {
     if (isEmpresa) {
@@ -304,5 +311,10 @@ class PublicacionesCubit extends Cubit<PublicacionesState> {
 
   _onProgress(double progress) async {
     emit(state.copyWith(progress: progress));
+  }
+
+  int? _getPagina(NotificacionTipo tipo) {
+    if (tipo == NotificacionTipo.MEGUSTA) return 1;
+    if (tipo == NotificacionTipo.COMENTARIO) return 0;
   }
 }
