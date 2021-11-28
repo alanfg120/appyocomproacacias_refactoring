@@ -11,11 +11,13 @@ class ResponseEmpresa extends ResponseHttp {
   final List<Publicacion>? publicaciones;
   final List<Calificacion>? calificaciones;
   final Calificacion? calificacion;
+  final Empresa? empresa;
 
   ResponseEmpresa(
       {this.productos, 
        this.publicaciones, 
        this.calificaciones, 
        this.empresas,
-       this.calificacion});
+       this.calificacion,
+       this.empresa});
 }

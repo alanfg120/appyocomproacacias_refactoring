@@ -1,5 +1,8 @@
 
+import 'package:appyocomproacacias_refactoring/src/componentes/empresas/cubit/perfil_empresa_cubit.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/empresas/data/empresa.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/models/notificacion.model.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/inicio/widgets/calificaciones.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/widgets/publicacion.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/publicaciones_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/data/publicaciones.repositorio.dart';
@@ -38,6 +41,13 @@ class DetalleNotificacion extends StatelessWidget {
        return BlocProvider(
               create: (context) => bloc..getPublicacionById(notification.idPublicacion!,tipo),
               child: PublicacionWidget(),
+       );
+     }
+    if(tipo == NotificacionTipo.CALIFICACION){
+       final bloc = PerfilEmpresaCubit(repositorio: EmpresaRepositorio(),prefs: PreferenciasUsuario());
+       return BlocProvider(
+              create: (context) => bloc..getEmpresaByid(notification.idEmpresa!),
+              child: CalificacionesWidget(),
        );
      }
   }

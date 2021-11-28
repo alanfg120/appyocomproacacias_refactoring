@@ -1,5 +1,6 @@
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/data/empresa.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/calificacion.model.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/response.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/producto.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/publicacion.model.dart';
@@ -38,7 +39,7 @@ class PerfilEmpresaCubit extends Cubit<PerfilEmpresaState> {
     }
   }
 
-  getCalificacionesEmpresa(int idEmpresa) async {
+  Future getCalificacionesEmpresa(int idEmpresa) async {
     if (state.initialDataCalificaciones == false) {
       emit(state.copyWith(loading: true));
       final response = await repositorio.getCalificacionesByEmpresa(idEmpresa);
@@ -70,6 +71,18 @@ class PerfilEmpresaCubit extends Cubit<PerfilEmpresaState> {
       }
     }
   }
+
+  getEmpresaByid(int idEmpresa)  async {
+    emit(state.copyWith(loading: true));
+    final response = await repositorio.getEmpresaByid(idEmpresa);
+    if(response is ResponseEmpresa){
+      emit(state.copyWith(empresa: response.empresa));
+       await getCalificacionesEmpresa(idEmpresa);
+    }
+    if(response is ErrorResponseHttp){
+      print(response.getError);
+    }
+  } 
 
   Future calicarEmpresa(Usuario usuario, int idUsuarioDest, int idEmpresa,
       String comentario) async {

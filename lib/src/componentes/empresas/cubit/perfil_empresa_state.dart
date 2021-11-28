@@ -12,6 +12,7 @@ part of 'perfil_empresa_cubit.dart';
              initialDataProductos,
              initialDataCalificaciones,
              duplicado;
+  final Empresa? empresa;
 
   const PerfilEmpresaState(
         {required this.starts,
@@ -24,7 +25,8 @@ part of 'perfil_empresa_cubit.dart';
          required this.initialDataProductos,
          required this.initialDataPublicaciones,
          required this.initialDataCalificaciones,
-         required this.duplicado});
+         required this.duplicado,
+         this.empresa});
   
   factory PerfilEmpresaState.initial() 
            => PerfilEmpresaState(
@@ -51,7 +53,8 @@ part of 'perfil_empresa_cubit.dart';
            bool? initialDataCalificaciones,
            bool? initialDataProductos,
            bool? initialDataPublicaciones,
-           bool? duplicado}
+           bool? duplicado,
+           Empresa? empresa}
            ) => PerfilEmpresaState(
                 starts                    : starts                    ?? this.starts,
                 pagina                    : pagina                    ?? this.pagina,
@@ -63,11 +66,12 @@ part of 'perfil_empresa_cubit.dart';
                 initialDataCalificaciones : initialDataCalificaciones ?? this.initialDataCalificaciones,
                 initialDataProductos      : initialDataProductos      ?? this.initialDataProductos,
                 initialDataPublicaciones  : initialDataPublicaciones  ?? this.initialDataPublicaciones,
-                duplicado                 : duplicado                 ?? this.duplicado
+                duplicado                 : duplicado                 ?? this.duplicado,
+                empresa                   : empresa                   ?? this.empresa
            );
   
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
                starts,
                pagina,
                publicaciones,
@@ -78,7 +82,8 @@ part of 'perfil_empresa_cubit.dart';
                initialDataPublicaciones,
                initialDataProductos,
                initialDataCalificaciones,
-               duplicado
+               duplicado,
+               empresa
   ];
 }
 

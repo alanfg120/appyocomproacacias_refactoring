@@ -93,6 +93,17 @@ class EmpresaRepositorio {
     }
     }
 
+ Future<ResponseHttp> getEmpresaByid(int idEmpresa) async {
+   try {
+    final response = await this._dio.get('/empresas/id/$idEmpresa');
+    return ResponseEmpresa(empresa: Empresa.toJson(response.data));
+   } on DioError  catch (error) {
+     return ErrorResponseHttp(error);
+   }
+    
+  }
+ 
+ 
   /*  Future<List<Producto>> getProductosByEmpresa(int idproductos) async {
     final response = await this._dio.get('/productos/empresa/$idproductos');
     return response.data
