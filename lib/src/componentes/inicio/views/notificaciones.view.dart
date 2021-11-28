@@ -54,18 +54,10 @@ class NotificationPage extends StatelessWidget {
                                                     ],
                                           ),
                                           onTap: (){
-
+                                           context.read<InicioCubit>().leerNotificacion(notificaciones[i].id);
                                            NavigationService().navigateToRoute(
                                              MaterialPageRoute(builder: (context) => DetalleNotificacion(notification: notificaciones[i]))
                                            );
-                                          /*   if(notificaciones[i].tipo == NotificacionTipo.COMENTARIO)
-                                               Get.to(PublicacionPage(idPublicacion: notificaciones[i].idPublicacion,pagina: 0));
-                                            if(notificaciones[i].tipo == NotificacionTipo.MEGUSTA)
-                                               Get.to(PublicacionPage(idPublicacion: notificaciones[i].idPublicacion,pagina: 1));
-                                            if(notificaciones[i].tipo == NotificacionTipo.CALIFICACION)
-                                               Get.to(CalificacionesLisTPage(idEmpresa: notificaciones[i].idEmpresa));
-                                            if(notificaciones[i].tipo == NotificacionTipo.MENSAJE)
-                                               Get.to(MensajePage(mensaje: notificaciones[i].mensaje,fecha: notificaciones[i].formatFecha())); */
                                           },
                                   ),
                            );

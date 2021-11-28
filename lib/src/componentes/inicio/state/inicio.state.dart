@@ -49,12 +49,10 @@ class InicioState extends Equatable {
 
   @override
   List<Object?> get props 
-   => [
-       loading, 
+   => [loading, 
        videos,
        initialDataLoaded,
        empresas,
        notificaciones,
-       notificacionesNoLeidas
-     ];
+       notificacionesNoLeidas];
 }

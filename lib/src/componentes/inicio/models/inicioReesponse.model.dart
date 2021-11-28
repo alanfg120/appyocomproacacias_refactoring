@@ -7,6 +7,7 @@ class InicioResponse extends ResponseHttp {
   final List<YouTubeVideoView>? videos;
   final List<Empresa>? empresas;
   final List<Notificacion>? notificaciones;
+  final bool? leida;
 
-  InicioResponse({this.videos,this.empresas,this.notificaciones});
+  InicioResponse({this.videos,this.empresas,this.notificaciones,this.leida});
 }

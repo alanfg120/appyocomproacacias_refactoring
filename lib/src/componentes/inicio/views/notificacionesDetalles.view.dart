@@ -52,7 +52,7 @@ class DetalleNotificacion extends StatelessWidget {
        );
      }
     if(tipo == NotificacionTipo.MENSAJE){
-       return MensajePage(mensaje: notification.mensaje, fecha: notification.fecha);
+       return MensajePage(mensaje: notification.mensaje, fecha: notification.formatFecha());
     }
   }
 }

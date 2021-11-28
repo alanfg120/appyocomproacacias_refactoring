@@ -48,7 +48,7 @@ class InicioRepositorio {
     }
   }
 
-   Future<ResponseHttp> getNotificaciones(int idUsuario) async {
+  Future<ResponseHttp> getNotificaciones(int idUsuario) async {
     try {
       final response = await _dio.get('/notificaciones/$idUsuario');
       final notificaciones = response.data
@@ -60,5 +60,16 @@ class InicioRepositorio {
       return ErrorResponseHttp(error);
     }
   }
+ 
+  Future<ResponseHttp> leerNotificacion(int idNotificacion) async {
+    try {
+      final response = await _dio.put('/notificaciones/leida',
+          data: {"id_notificacion": idNotificacion});
+      return InicioResponse(leida: response.data['leida']);
+    }on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  }
+
 
 }

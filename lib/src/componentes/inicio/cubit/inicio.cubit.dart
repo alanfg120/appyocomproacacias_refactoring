@@ -9,14 +9,31 @@ import 'package:appyocomproacacias_refactoring/src/recursos/shared.service.dart'
 import 'package:bloc/bloc.dart';
 
 class InicioCubit extends Cubit<InicioState> {
-  
   final InicioRepositorio repocitorio;
   final PreferenciasUsuario prefs;
   InicioCubit({required this.repocitorio, required this.prefs})
       : super(InicioState.initial());
 
+  leerNotificacion(int idNotificacion) async {
+    final response = await repocitorio.leerNotificacion(idNotificacion);
+    if (response is InicioResponse) {
+      if (response.leida!) {
+        final index =
+            state.notificaciones.indexWhere((n) => n.id == idNotificacion);
+        final newNotificacion =
+            state.notificaciones[index].copyWith(leida: true);
+        emit(state.copyWith(
+            notificaciones: List.of(state.notificaciones)
+              ..removeAt(index)
+              ..insert(index, newNotificacion),
+            notificacionesNoLeidas: state.notificacionesNoLeidas - 1
+        )
+        );
+      }
+    }
+  }
+
   getDataInitial(TipoUsuario typeUsuario) async {
-    
     if (!state.initialDataLoaded && typeUsuario == TipoUsuario.ANONYMOUS ||
         typeUsuario == TipoUsuario.NOT_LODGET) {
       await this._getVideos();

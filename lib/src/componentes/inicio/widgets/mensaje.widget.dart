@@ -44,6 +44,7 @@ class MensajePage extends StatelessWidget {
                     height : 80,
                     ),
              ),
+             SizedBox(width: 8),
              Column(
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
