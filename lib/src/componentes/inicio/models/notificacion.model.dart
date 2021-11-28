@@ -25,7 +25,9 @@ class Notificacion  extends Equatable {
 
   factory Notificacion.toJson(Map<String, dynamic> json) => Notificacion(
         id            : json['id'],
-        usuario       : Usuario.toJson(json['usuario_remitente']) ,
+        usuario       : json['usuario_remitente'] != null
+                        ? Usuario.toJson(json['usuario_remitente'])
+                        : null,
         mensaje       : json['mensaje'] ?? '',
         titulo        : json['titulo'] ?? '',
         idEmpresa     : json['id_empresa'] ?? 0,

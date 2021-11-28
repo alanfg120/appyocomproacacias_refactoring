@@ -3,6 +3,7 @@ import 'package:appyocomproacacias_refactoring/src/componentes/empresas/cubit/pe
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/data/empresa.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/models/notificacion.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/widgets/calificaciones.widget.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/inicio/widgets/mensaje.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/widgets/publicacion.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/publicaciones_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/data/publicaciones.repositorio.dart';
@@ -50,6 +51,9 @@ class DetalleNotificacion extends StatelessWidget {
               child: CalificacionesWidget(),
        );
      }
+    if(tipo == NotificacionTipo.MENSAJE){
+       return MensajePage(mensaje: notification.mensaje, fecha: notification.fecha);
+    }
   }
 }
 
