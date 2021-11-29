@@ -1,16 +1,18 @@
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/imageFile.model.dart';
 import 'package:equatable/equatable.dart';
 
 class Usuario  extends Equatable {
   final int id;
   final String?
-      imagen,
       nombre,
       email,
       cedula,
       fechaCreacion;
   final List<Empresa> empresas;
   final bool administrador;
+  final ImageFile? imagen;
+
   Usuario(
       {
       required this.id,
@@ -26,7 +28,7 @@ class Usuario  extends Equatable {
   factory Usuario.toJson(Map<String, dynamic> json) 
     => Usuario(
        id              : json['id']                 ?? 0,
-       imagen          : json['imagen']             ?? '',
+       imagen          : ImageFile(nombre : json['imagen'] ?? '',isaFile: false),
        nombre          : json['nombre']             ?? '',
        cedula          : json['cedula']             ?? '',
        email           : json['usuario']            ?? '',
@@ -35,9 +37,10 @@ class Usuario  extends Equatable {
        empresas        : json['empresas']?.map<Empresa>((empresa)=>Empresa.toJson(empresa))?.toList() ?? []      
 
     );
+
 Usuario copyWith({
   int?    id,
-  String?  imagen,
+  ImageFile?  imagen,
   String?  nombre,
   String?  cedula,
   String?  biografia,

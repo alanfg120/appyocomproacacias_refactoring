@@ -101,37 +101,6 @@ class _PerfilEmpresaPageState extends State<PerfilEmpresaPage> {
            
   }
 
- /*  void _calificar() {
-   Get.defaultDialog(
-   title: "Califica este Negocio",
-   content:  Container(
-             color: Colors.white,
-             height: Get.height * 0.25,
-             child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CalificarWidget(),
-                      InputForm(
-                      controller  : Get.find<EmpresasController>().calificarController,
-                      placeholder : "Escribe un Comentario",
-                      autofocus   : true, 
-                      textcenter  : true, 
-                      )
-                    ],
-             )
-             ),
-   confirm: FlatButton(
-            onPressed: ()=>Get.back(),
-            child: Text('Cancelar'),
-            ),
-   cancel: FlatButton(
-            color: Get.theme.primaryColor,
-            onPressed: ()=>Get.find<EmpresasController>().addCalificacionEmpresa(),
-            child: Text('Calificar',style:TextStyle(color: Colors.white)),
-            ),
-   ); 
-  } */
-
   void _getData(int pagina) {
     if(pagina == 1)
      context.read<PublicacionesCubit>().getPublicacionesEmpresa(widget.empresa.id!);
@@ -430,14 +399,14 @@ class _CalificacionesEmpresa extends StatelessWidget {
                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                children: [
                                                            ListTile(
-                                                           leading: calificaciones[i].usuario!.imagen! == ''
+                                                           leading: calificaciones[i].usuario!.imagen!.nombre.isEmpty
                                                                     ? CircleAvatar(
                                                                       radius          : 30,
                                                                       backgroundImage : AssetImage('assets/imagenes/logo_no_img.png')
                                                                       )
                                                                     : CircleAvatar(
                                                                       radius          : 30,
-                                                                      backgroundImage : CachedNetworkImageProvider('$url/usuario/${calificaciones[i].usuario!.imagen!}')
+                                                                      backgroundImage : CachedNetworkImageProvider('$url/usuarios/${calificaciones[i].usuario!.imagen!.nombre}')
                                                                       ),
                                                            title    : Text(calificaciones[i].usuario!.nombre!),
                                                            ),

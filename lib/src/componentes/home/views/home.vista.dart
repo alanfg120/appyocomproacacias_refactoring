@@ -8,6 +8,7 @@ import 'package:appyocomproacacias_refactoring/src/componentes/inicio/views/inic
 import 'package:appyocomproacacias_refactoring/src/componentes/login/views/login.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/publicaciones_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/views/publicaciones.page.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/views/usuario.view.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,7 +39,7 @@ class HomePage extends StatelessWidget {
                                                    PublicacionesPage(),
                                                    CategoriasPage(),
                                                    if(state.currentUsuario == TipoUsuario.LODGET)
-                                                   Container()
+                                                   UsuarioOptios()
                                                   ],
                                         ),
                                         bottomNavigationBar: _buttomBarNavigator(state,context)

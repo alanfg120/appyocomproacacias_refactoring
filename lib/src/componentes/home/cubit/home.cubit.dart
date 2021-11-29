@@ -71,7 +71,6 @@ class HomeCubit extends Cubit<HomeState> {
    else emit(state.copyWith(offline: true,loading: false));
   }
 
-
   Future<bool> _verificationInternet() async {
     try {
       final result = await InternetAddress.lookup('google.com');

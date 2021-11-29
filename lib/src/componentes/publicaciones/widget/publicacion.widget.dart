@@ -414,7 +414,7 @@ class _ListComentarios extends StatelessWidget {
 
   Widget _listItems(List<Comentario> comentarios, int index) {
     return ListTile(
-           leading  : comentarios[index].usuario.imagen!.isEmpty
+           leading  : comentarios[index].usuario.imagen!.nombre.isEmpty
                       ?
                       CircleAvatar(
                       backgroundImage: AssetImage('assets/imagenes/logo_no_img.png')
@@ -422,7 +422,7 @@ class _ListComentarios extends StatelessWidget {
                       :
                       CircleAvatar(
                       backgroundImage: CachedNetworkImageProvider(
-                        '$url/usuarios/${comentarios[index].usuario.imagen}'
+                        '$url/usuarios/${comentarios[index].usuario.imagen!.nombre}'
                       ),
                       ),
            title    : Text(comentarios[index].usuario.nombre!),
@@ -487,7 +487,7 @@ class _ListLikes extends StatelessWidget {
                      itemCount   : usuariosLike.length,
                      itemBuilder : (context,i){
                                      return ListTile(
-                                            leading  : usuariosLike[i].usuario.imagen== ''
+                                            leading  : usuariosLike[i].usuario.imagen!.nombre.isEmpty
                                                        ? 
                                                        CircleAvatar(
                                                          backgroundImage: AssetImage('assets/imagenes/logo_no_img.png')
@@ -495,7 +495,7 @@ class _ListLikes extends StatelessWidget {
                                                        :
                                                        CircleAvatar(
                                                        backgroundImage: CachedNetworkImageProvider(
-                                                         '$url/usuarios/${usuariosLike[i].usuario.imagen}'
+                                                         '$url/usuarios/${usuariosLike[i].usuario.imagen!.nombre}'
                                                        ),
                                                        ),
                                             title    : Text(usuariosLike[i].usuario.nombre!),

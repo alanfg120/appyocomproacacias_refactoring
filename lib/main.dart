@@ -11,6 +11,8 @@ import 'package:appyocomproacacias_refactoring/src/componentes/login/cubit/login
 import 'package:appyocomproacacias_refactoring/src/componentes/login/data/login.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/publicaciones_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/data/publicaciones.repositorio.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/cubit/usuario_cubit.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/data/usuario.repository.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/bloc.observer.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/dio.singleton.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
@@ -77,7 +79,10 @@ class MyApp extends StatelessWidget {
              ),
              BlocProvider.value(
              value: homeCubit!
-             )
+             ),
+             BlocProvider<UsuarioCubit>(
+             create: (context) => UsuarioCubit(usuario: homeCubit!.state.usuario!,repocitorio: UsuarioRepocitorio()),
+             ),
            ],
            child: BlocSelector<HomeCubit,HomeState,bool>(
              selector: (state) => state.offline,

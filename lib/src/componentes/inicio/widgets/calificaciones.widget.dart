@@ -40,7 +40,6 @@ class CalificacionesWidget extends StatelessWidget {
     );
   }
 }
-
 class _CardEmpresa extends StatelessWidget {
   final Empresa empresa;
   const _CardEmpresa({Key? key,required this.empresa}) : super(key: key);
@@ -115,7 +114,7 @@ class _ListCalificaciones extends StatelessWidget {
                                                       )
                                                       : CircleAvatar(
                                                         radius: 30,
-                                                        backgroundImage: CachedNetworkImageProvider('$url/usuarios/${calificaciones[i].usuario!.imagen}'),
+                                                        backgroundImage: CachedNetworkImageProvider('$url/usuarios/${calificaciones[i].usuario!.imagen!.nombre}'),
                                                       )
                                             ),
                                             Padding(

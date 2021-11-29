@@ -231,7 +231,7 @@ class _Comentarios extends StatelessWidget {
                 ),
                 child: ListTile(
                        contentPadding: EdgeInsets.all(5),
-                       leading  : comentarios.usuario.imagen == ''
+                       leading  : comentarios.usuario.imagen!.nombre.isEmpty
                                   ?
                                   CircleAvatar(
                                   maxRadius: 40,
@@ -269,7 +269,7 @@ class _Likes extends StatelessWidget {
      return Column(
              children: likes.map<Widget>((usuarios){
                return  ListTile(
-                              leading  : usuarios.usuario.imagen== ''
+                              leading  : usuarios.usuario.imagen!.nombre.isEmpty
                                          ? 
                                          CircleAvatar(
                                            backgroundImage: AssetImage('assets/imagenes/logo_no_img.png')
