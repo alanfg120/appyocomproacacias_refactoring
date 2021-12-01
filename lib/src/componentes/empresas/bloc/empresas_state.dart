@@ -1,6 +1,7 @@
 part of 'empresas_bloc.dart';
 
 class EmpresasState extends Equatable {
+  
   final List<Empresa> resultEmpresa;
   final bool loading;
   

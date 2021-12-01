@@ -12,5 +12,11 @@ class SearchEmpresaEvent  extends EmpresasEvent {
   @override
   List<Object> get props => [text];
 }
+class RegistarVisitaEmpresaEvent  extends EmpresasEvent {
+  final int idEmpresa;
+  RegistarVisitaEmpresaEvent({required this.idEmpresa});
+  @override
+  List<Object> get props => [idEmpresa];
+}
 
 

@@ -168,6 +168,7 @@ class LoginCubit extends Cubit<LoginState> {
       final error = _getTipoError(response.getError);
       emit(state.copyWith(error: error, loading: false));
     }
+    emit(state.copyWith(logiado: false));
   }
 
   Map<String, dynamic>? _getSocialdMap(SocialAuthType type, String socialId) {

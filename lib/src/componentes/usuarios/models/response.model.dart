@@ -2,6 +2,7 @@ import 'package:appyocomproacacias_refactoring/src/componentes/response/models/r
 
 class UsuarioResponse extends ResponseHttp {
   final bool? update;
+  final bool? sendReporte;
 
-  UsuarioResponse({this.update});
+  UsuarioResponse({this.update,this.sendReporte});
 }

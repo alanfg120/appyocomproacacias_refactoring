@@ -240,7 +240,7 @@ class _Comentarios extends StatelessWidget {
                                   :
                                   CircleAvatar(
                                   backgroundImage: CachedNetworkImageProvider(
-                                    '$url/usuarios/${comentarios.usuario.imagen}'
+                                    '$url/usuarios/${comentarios.usuario.imagen!.nombre}'
                                   ),
                                   ),
                        title    : Text(comentarios.usuario.nombre!),
@@ -277,7 +277,7 @@ class _Likes extends StatelessWidget {
                                          :
                                          CircleAvatar(
                                          backgroundImage: CachedNetworkImageProvider(
-                                           '$url/usuarios/${usuarios.usuario.imagen}'
+                                           '$url/usuarios/${usuarios.usuario.imagen!.nombre}'
                                          ),
                                          ),
                               title    : Text(usuarios.usuario.nombre!),

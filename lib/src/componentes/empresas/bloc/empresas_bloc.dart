@@ -1,4 +1,3 @@
-
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/data/empresa.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/response.model.dart';
@@ -22,7 +21,6 @@ class EmpresasBloc extends Bloc<EmpresasEvent, EmpresasState> {
 
   EmpresasBloc({required this.repositorio, required this.prefs})
       : super(EmpresasState.intial()) {
-
     on<SearchEmpresaEvent>((event, emit) async {
       if (event.text.length > 3) {
         emit(state.copyWith(loading: true));
@@ -35,8 +33,19 @@ class EmpresasBloc extends Bloc<EmpresasEvent, EmpresasState> {
           print(response.getError);
         }
       }
-    }, 
-    transformer: debounce(Duration(milliseconds: 500)));
-  
+    }, transformer: debounce(Duration(milliseconds: 500)));
+
+    on<RegistarVisitaEmpresaEvent>((event, emit) async {
+      final response = await repositorio.registrarVisitaEmpresa(
+          event.idEmpresa, prefs.idUsuario);
+      if(response is ResponseEmpresa){
+        if(response.visita!){
+          print('Visita registrada');
+        }
+      }
+      if(response is ErrorResponseHttp){
+        print('Ocurrio un error');
+      }
+    });
   }
 }

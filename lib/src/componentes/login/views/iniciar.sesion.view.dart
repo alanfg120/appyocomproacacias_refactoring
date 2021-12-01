@@ -8,6 +8,7 @@ import 'package:appyocomproacacias_refactoring/src/componentes/login/state/login
 import 'package:appyocomproacacias_refactoring/src/componentes/login/widgets/button_apple.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/login/widgets/button_google.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/login/widgets/dialog.recovery.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/cubit/usuario_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/dialogLoading.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/snack.widged.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/InputForm.widget.dart';
@@ -42,9 +43,10 @@ class LoginFormPage extends StatelessWidget {
                         if(state.loading)
                          dialogLoading(context,'Iniciando');
                         if(!state.loading)
-                         Navigator.of(context).pop();
+                        NavigationService().back();
                         if(state.logiado){
                           context.read<HomeCubit>().updateUsuario(state.usuario);
+                          context.read<UsuarioCubit>().updateUsuario(state.usuario!);
                           NavigationService().back();
                         }
                         _snacKBarError(state.error,context);

@@ -2,13 +2,20 @@ import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.c
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/imageFile.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/cubit/usuario_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/models/usuario.model.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/widgets/dialogPassword.widget.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/widgets/dialogoUsuarioData.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/dialogImage.widget.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/widgets/snack.widged.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/image_piker.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+
+
+
+
 
 class UsuarioOptios extends StatelessWidget {
 
@@ -21,65 +28,68 @@ class UsuarioOptios extends StatelessWidget {
            appBar: AppBar(
                    title     : Text('Opciones de Usuario'),
                    elevation : 0,
-                   actions: [
-                     IconButton(
-                     onPressed: (){}, 
-                     icon: Icon(Icons.logout_outlined)
+           ),
+           body: SingleChildScrollView(
+             child: Column(
+                   children: [
+                     _Perfil(),
+                     Column(
+                            children: [
+                              _Opciones(
+                               titulo: 'Empresas y productos', 
+                               children: [
+                                     _ItemOption(
+                                      icon: Icons.business, 
+                                      text: 'Tus Empresas', 
+                                      onTap: () => NavigationService().navigateTo('empresas')
+                                     ),
+                                     _ItemOption(
+                                      icon: Icons.shopping_bag, 
+                                      text: 'Tus Productos', 
+                                      onTap: (){}
+                                     ),
+                                    
+                               ],
+                              ),
+                                _Opciones(
+                               titulo: 'Opciones de usuario', 
+                               children: [
+                                     _ItemOption(
+                                      icon: Icons.lock, 
+                                      text: 'Cambiar Contraseña', 
+                                      onTap: () => showDialog(
+                                                   context : context,
+                                                   builder : (context)=> DialogChangePassword()
+                                      )
+                                     ),
+                                     _ItemOption(
+                                      icon: Icons.refresh, 
+                                      text: 'Actualizar Datos', 
+                                       onTap: () => showDialog(
+                                                   context : context,
+                                                   builder : (context)=> DialogChangeData()
+                                      )
+                                     ),
+                                     _ItemOption(
+                                      icon: Icons.help, 
+                                      text: 'Ayuda', 
+                                      onTap: () => NavigationService().navigateTo('help')
+                                     ),
+                                     _ItemOption(
+                                      icon: Icons.logout_rounded, 
+                                      text: 'Cerrar sesion', 
+                                      onTap: () => context.read<HomeCubit>().logOut()
+                                     ) 
+                               ],
+                              ),
+                            ],
                      )
                    ],
-           ),
-           body: Column(
-                 children: [
-                   _Perfil(),
-                   SingleChildScrollView(
-                   child: Column(
-                          children: [
-                            _Opciones(
-                             titulo: 'Opciones de usuario', 
-                             children: [
-                                   _ItemOption(
-                                    icon: Icons.lock, 
-                                    text: 'Cambiar Contraseña', 
-                                    onTap: (){}
-                                   ),
-                                   _ItemOption(
-                                    icon: Icons.refresh, 
-                                    text: 'Actualizar Datos', 
-                                    onTap: (){}
-                                   ),
-                                   _ItemOption(
-                                    icon: Icons.help, 
-                                    text: 'Ayuda', 
-                                    onTap: (){}
-                                   ) 
-                             ],
-                            ),
-                            _Opciones(
-                             titulo: 'Empresas y productos', 
-                             children: [
-                                   _ItemOption(
-                                    icon: Icons.business, 
-                                    text: 'Tus Empresas', 
-                                    onTap: (){}
-                                   ),
-                                   _ItemOption(
-                                    icon: Icons.shopping_bag, 
-                                    text: 'Tus Productos', 
-                                    onTap: (){}
-                                   ),
-                                  
-                             ],
-                            )
-                          ],
-                   ),  
-                   )
-                 ],
+             ),
            )
     );
   }
 }
-
-
 class _Perfil extends StatelessWidget {
   const _Perfil({Key? key}) : super(key: key);
 
@@ -88,32 +98,44 @@ class _Perfil extends StatelessWidget {
 
     final url = context.read<HomeCubit>().urlImagenes;
 
-    return BlocSelector<UsuarioCubit,UsuarioState,Usuario>(
-           selector : (state) => state.usuario,
-           builder  : (context,usuario){
-             return Padding(
-                    padding : const EdgeInsets.all(8.0),
-                    child   : Card(
-                              shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                              elevation : 3,
-                              child     : Padding(
-                              padding   : const EdgeInsets.all(15.0),
-                              child     : Row(
-                                          children: [
-                                            ClipRRect(
-                                            borderRadius: BorderRadius.circular(300),
-                                            child:  _imagenUsuario(usuario.imagen!,url)
-                                            ),
-                                            SizedBox(
-                                            width: 30,
-                                            ),
-                                            _nombre(usuario,context)
-                                          ],
+    return BlocListener<UsuarioCubit, UsuarioState>(
+      listener: (context, state) {
+        if(state.updatePassword){
+          snacKBar('Contraseña Cambiada', context);
+          NavigationService().back();
+        }
+        if(state.updateData){
+          snacKBar('Datos Cambiados', context);
+          NavigationService().back();
+        }
+      },
+      child: BlocSelector<UsuarioCubit,UsuarioState,Usuario>(
+               selector : (state) => state.usuario,
+               builder  : (context,usuario){
+                 return Padding(
+                        padding : const EdgeInsets.all(8.0),
+                        child   : Card(
+                                  shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                  elevation : 3,
+                                  child     : Padding(
+                                  padding   : const EdgeInsets.all(15.0),
+                                  child     : Row(
+                                              children: [
+                                                ClipRRect(
+                                                borderRadius: BorderRadius.circular(300),
+                                                child:  _imagenUsuario(usuario.imagen!,url)
+                                                ),
+                                                SizedBox(
+                                                width: 30,
+                                                ),
+                                                _nombre(usuario,context)
+                                              ],
+                       ),
+                     ),
                    ),
-                 ),
-               ),
-             );
-           },
+                 );
+               },
+        ),
     );
   }
 
@@ -192,7 +214,6 @@ class _Perfil extends StatelessWidget {
   }
 
 }
-
 class _Opciones extends StatelessWidget {
 
   final  String titulo;
@@ -222,7 +243,6 @@ class _Opciones extends StatelessWidget {
     );
   }
 }
-
 class _ItemOption extends StatelessWidget {
   final IconData icon;
   final String text;

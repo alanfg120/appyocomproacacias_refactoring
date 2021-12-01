@@ -8,8 +8,10 @@ import 'package:appyocomproacacias_refactoring/src/componentes/response/models/E
 import 'package:appyocomproacacias_refactoring/src/componentes/response/models/error.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/models/usuario.model.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/dio.singleton.dart';
+import 'package:appyocomproacacias_refactoring/src/recursos/google_sing_in.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/shared.service.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 
 class HomeCubit extends Cubit<HomeState> {
@@ -81,5 +83,11 @@ class HomeCubit extends Cubit<HomeState> {
       return false;
     }
     return false;
+  }
+  Future logOut() async {
+    preferencias.eraseall();
+    await googleLogOut();
+    await FacebookAuth.instance.logOut();
+    emit(state.copyWith(currentUsuario: TipoUsuario.NOT_LODGET,page: 0));
   }
 }

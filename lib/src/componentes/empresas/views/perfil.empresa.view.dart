@@ -1,4 +1,5 @@
 
+import 'package:appyocomproacacias_refactoring/src/componentes/empresas/bloc/empresas_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/cubit/perfil_empresa_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/data/empresa.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
@@ -52,8 +53,11 @@ class _PerfilEmpresaPageState extends State<PerfilEmpresaPage> {
         final homeState = context.read<HomeCubit>().state;
         final url = homeState.url;
         final TipoUsuario usuario = homeState.currentUsuario;
-      
-        
+        context.read<EmpresasBloc>().add(
+           RegistarVisitaEmpresaEvent(
+           idEmpresa: widget.empresa.id!
+           )
+        );
 
         return AnnotatedRegion<SystemUiOverlayStyle>(
                value: SystemUiOverlayStyle(
@@ -376,6 +380,8 @@ class _CalificacionesEmpresa extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
+  
+
     return BlocBuilder<PerfilEmpresaCubit,PerfilEmpresaState>(
            builder: (context,state){
            final calificaciones = state.calificaciones;

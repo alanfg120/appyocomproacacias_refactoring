@@ -108,7 +108,6 @@ class HomePage extends StatelessWidget {
      if(index == 0) context.read<InicioCubit>().getDataInitial(homeCubit.state.currentUsuario);
      if(index == 1) print('Initial Data Tienda');
      if(index == 2) context.read<PublicacionesCubit>().getInitiData();
-     if(index == 4) print('Initial Data configuracion');
    }
   }
 

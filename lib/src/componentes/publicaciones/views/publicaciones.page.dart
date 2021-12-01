@@ -50,6 +50,7 @@ class _PublicacionesPageState extends State<PublicacionesPage> {
             backgroundColor: Colors.grey[300],
             floatingActionButton: usuario == TipoUsuario.LODGET
                                   ? FloatingActionButton.extended(
+                                    heroTag         : 'publicar',
                                     backgroundColor : Theme.of(context).primaryColor,
                                     label           : Text('Publicar',style: TextStyle(color: Colors.white)),
                                     icon            : Icon(Icons.add,color: Colors.white),

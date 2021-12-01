@@ -11,6 +11,7 @@ class InputForm extends StatelessWidget {
   final bool lastInput,requerido,obscure,isEmail,readOnly,isButtonIcon,textarea,autofocus,textcenter,enabled,number;
   final VoidCallback? onEditingComplete,onButtonIcon;
   final Function(String)? onChanged;
+  final String? Function(String? value)? validator;
 
 
   InputForm({
@@ -36,7 +37,8 @@ class InputForm extends StatelessWidget {
   this.number = false,
   this.onEditingComplete,
   this.onButtonIcon,
-  this.onChanged
+  this.onChanged,
+  this.validator
   })
       : super(key: key);
 
@@ -100,15 +102,9 @@ class InputForm extends StatelessWidget {
                                                   borderSide: BorderSide(color: primaryColor)
                                  )
              ),
-             validator         : (texto){
-                                 if(texto!.isEmpty && requerido) 
-                                   return "es requerido"; 
-                                 if(isEmail && !isAEmail(texto))
-                                   return 'no es un email valido';          
-                                 return null;
-                                
-                                    
-             },
+             validator         : validator == null
+                                 ? _validator
+                                 : validator,
              onChanged: onChanged,
       ),
     );
@@ -122,5 +118,15 @@ class InputForm extends StatelessWidget {
     if(number)
      return TextInputType.number;
     return null;
+  }
+
+  String? _validator(String? texto) {
+     if(texto!.isEmpty && requerido) 
+       return "es requerido"; 
+     if(isEmail && !isAEmail(texto))
+       return 'no es un email valido';          
+     if(isEmail && !isAEmail(texto))
+       return 'no es un email valido';                 
+     return null;
   }
 }

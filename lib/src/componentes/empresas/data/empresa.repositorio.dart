@@ -103,6 +103,17 @@ class EmpresaRepositorio {
     
   }
  
+ Future<ResponseHttp> registrarVisitaEmpresa(
+      int idEmpresa, int idUsuario) async {
+    try {
+      FormData data =
+          FormData.fromMap({"id_empresa": idEmpresa, "id_usuario": idUsuario});
+      final response = await _dio.post('/visitas/add/', data: data);
+      return ResponseEmpresa(visita: response.data['visita']);
+    } on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  }
  
   /*  Future<List<Producto>> getProductosByEmpresa(int idproductos) async {
     final response = await this._dio.get('/productos/empresa/$idproductos');
