@@ -22,7 +22,7 @@ class FormEmpresaCubit extends Cubit<FormEmpresaState> {
       : super(FormEmpresaState.initial());
 
   changePagina(int pagina) {
-    if(pagina >= 0  && pagina < 5 && state.logo != null)
+    if(pagina >= 0  && pagina < 5)
       emit(state.copyWith(index: pagina));
   }
   
@@ -48,13 +48,14 @@ class FormEmpresaCubit extends Cubit<FormEmpresaState> {
      final response = await repositorio.addEmpresa(empresa,prefs.idUsuario,state.logo!.file!.path);
      if(response is ResponseEmpresa){
        final newEmpresa = empresa.copyWith(id: response.id);
-       emit(state.copyWith(loading:  false));
+       emit(state.copyWith(loading:  false,add: true));
        return newEmpresa;
      }
      if(response is ErrorResponseHttp){
        print(response.getError);
-       emit(state.copyWith(loading:  false));
+       emit(state.copyWith(loading: false,error: ErrorFormEmpresaResponse.RESPONSE_ERROR));
      }
+     emit(state.copyWith(error: ErrorFormEmpresaResponse.NO_ERROR));
    }
   
   

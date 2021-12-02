@@ -2,7 +2,6 @@ import 'package:appyocomproacacias_refactoring/src/componentes/empresas/bloc/emp
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/views/formEmpresa.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
-import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.state.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +39,7 @@ class EmpresasPage extends StatelessWidget {
                                    backgroundColor : Theme.of(context).primaryColor,
                                    label           : Text('Crear',style: TextStyle(color: Colors.white)),
                                    tooltip         : 'Crea una Empresa',
-                                   onPressed       : context.read<HomeCubit>().state.usuario!.empresas.length >= 6
+                                   onPressed       : context.read<HomeCubit>().state.usuario!.empresas.length >= 5
                                                      ? null
                                                      : () => NavigationService().navigateToRoute(
                                                              MaterialPageRoute(builder: (context) => FormEmpresaPage())
@@ -77,41 +76,60 @@ class _EmpresaList extends StatelessWidget {
               icon      : Icon(Icons.edit),
               iconSize  : 30,
               color     : Colors.green,
-              onPressed : (){}, 
+              onPressed : () => NavigationService().navigateToRoute(
+                 MaterialPageRoute(builder: (context) =>FormEmpresaPage(
+                   update:  true,
+                   empresa: empresa,
+                 ))
+              ) 
               ),
               IconButton(
               icon      : Icon(Icons.delete),
               iconSize  : 30,
               color     : Colors.red,
-              onPressed : () => showDialog(context: context, builder: (context) => _DialogoDelete()), 
+              onPressed : () => showDialog(context: context, builder: (context) => _DialogoDelete(idEmpresa: empresa.id!)), 
               )
           ],
     );
 }
 }
 class _DialogoDelete extends StatelessWidget {
-  const _DialogoDelete({Key? key}) : super(key: key);
+  final int idEmpresa;
+  const _DialogoDelete({Key? key,required this.idEmpresa}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
            shape   : RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
            title   : Text('Eliminar Empresa'),
-           content : Text('Desea eliminar la empresa?'),
+           content : BlocConsumer<EmpresasBloc, EmpresasState>(
+                     listener: (context,state){
+                       if(!state.loadingDelete)
+                         NavigationService().back();
+                     },
+                     builder: (context, state) {
+                       if(state.loadingDelete)
+                        return Container(
+                               height: 100,
+                               child: Center(child: CircularProgressIndicator())
+                               );
+                       return Text('Desea eliminar la empresa?');
+                  },
+           ),
            actions : [
              ElevatedButton(
              child : Text('Aceptar'),
              style : ElevatedButton.styleFrom(
                      primary: Theme.of(context).primaryColor
              ),
-             onPressed: () async {},
+             onPressed: () => context.read<EmpresasBloc>().add(DeleeteEmpresaEvent(idEmpresa: idEmpresa)),
              ),
              ElevatedButton(
              child : Text('Cancelar'),
              style : ElevatedButton.styleFrom(
                      primary: Theme.of(context).accentColor
              ),
-             onPressed: () async {},
+             onPressed: () => NavigationService().back(),
              ),
            ],
     );

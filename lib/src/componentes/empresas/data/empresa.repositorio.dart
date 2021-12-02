@@ -129,6 +129,16 @@ class EmpresaRepositorio {
     }
   }
 
+
+  Future<ResponseHttp> deleteEmpresa(int id) async {
+    try {
+      final response = await this._dio.delete('/empresas/delete/$id');
+      return ResponseEmpresa(delete: response.data['delete']);
+    } on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  }
+
   /*  Future<List<Producto>> getProductosByEmpresa(int idproductos) async {
     final response = await this._dio.get('/productos/empresa/$idproductos');
     return response.data

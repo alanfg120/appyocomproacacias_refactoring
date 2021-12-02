@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-void snacKBar(String texto,BuildContext context,[String action = 'Aceptar',Function()? onPressed ]){
+void snacKBar(String texto,BuildContext context,{String action = 'Aceptar',Function()? onPressed,Function()? onclose}){
    final snackBar = SnackBar(
                      content : Text(texto),
                      action  : SnackBarAction(
@@ -14,6 +14,7 @@ void snacKBar(String texto,BuildContext context,[String action = 'Aceptar',Funct
                      duration: Duration(seconds: 2),
                      behavior: SnackBarBehavior.fixed,
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+     ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((value) => onPressed!.call());
+  
 }
 

@@ -26,19 +26,19 @@ class FormEmpresaPage extends StatelessWidget {
   FormEmpresaPage({Key? key, this.update = false,this.empresa}) : super(key: key);
 
  // Datos Basicos
-  late String nombre;
-  late String nit;
-  late String descripcion;
-  late String direccion;
+  String? nombre;
+  String? nit;
+  String? descripcion;
+  String? direccion;
  // Datos de contacto
-  late String telefono;
-  late String whatsap;
-  late String correo;
-  String web = '';
+  String? telefono;
+  String? whatsap;
+  String? correo;
+  String? web;
 
   //Geolocalizacion
-   late String latidud;
-   late String longitud;
+   String? latidud;
+   String? longitud;
  
   // Focos Datos Basicos
    FocusNode focoNombre      = FocusNode();
@@ -66,16 +66,32 @@ class FormEmpresaPage extends StatelessWidget {
          child  :  GestureDetector(
                         child: BlocListener<FormEmpresaCubit,FormEmpresaState>(
                           bloc: _bloc,
-                          listener: (context, state) {
+                          listener: (context, state) async {
                             if(state.loading){
-                              dialogLoading(context, 'Creando empresa');
+                              dialogLoading(context, '${update ? 'Actualizando' : 'Creando'} empresa');
                             }
-                            if(!state.loading){
+                            if(state.add){
                               NavigationService().back();
+                               snacKBar(
+                               'Empresa Creada',
+                                context,
+                                action: 'Aceptar',
+                                onPressed: ()=> NavigationService().back(),
+                                onclose  : ()=> NavigationService().back()
+                              );
+                            }
+                            if(state.error == ErrorFormEmpresaResponse.RESPONSE_ERROR){
                               NavigationService().back();
+                              showDialog(
+                              context: context, 
+                              builder: (context) => _DialogoError()
+                              );
                             }
                           },
-                          listenWhen: (previusState,state) => previusState.loading != state.loading,
+                          listenWhen: (previusState,state) 
+                             => previusState.loading != state.loading
+                                || previusState.error != state.error
+                                || previusState.add != state.add,
                           child: BlocSelector<FormEmpresaCubit, FormEmpresaState,int>(
                                  bloc: _bloc,
                                  selector: (state) => state.index,
@@ -121,7 +137,8 @@ class FormEmpresaPage extends StatelessWidget {
                    placeholder       : "Nombre de la Empresa",
                    foco              : focoNombre,
                    leftIcon          : Icons.business,
-                   requerido         : true, 
+                   requerido         : true,
+                   initialValue      : update ? empresa!.nombre : '',
                    onChanged         : (text) => nombre = text,
                    onEditingComplete : ()=>FocusScope.of(context).requestFocus(focoNit)
                    ),
@@ -130,6 +147,7 @@ class FormEmpresaPage extends StatelessWidget {
                    foco              :  focoNit,
                    leftIcon          : Icons.card_membership,
                    requerido         : true,
+                   initialValue      : update ? empresa!.nit : '',
                    onChanged         : (text) => nit = text,
                    onEditingComplete : ()=>FocusScope.of(context).requestFocus(focoDescripcion)
                    ),
@@ -139,6 +157,7 @@ class FormEmpresaPage extends StatelessWidget {
                    leftIcon          : Icons.text_fields,
                    requerido         : true,
                    textarea          : true,
+                   initialValue      : update ? empresa!.descripcion : '',
                    onChanged         : (text) =>  descripcion = text,
                    onEditingComplete : ()=>FocusScope.of(context).requestFocus(focoDireccion)
                    ),
@@ -147,6 +166,7 @@ class FormEmpresaPage extends StatelessWidget {
                    foco              : focoDireccion,
                    leftIcon          : Icons.map,
                    requerido         : true,
+                   initialValue      : update ? empresa!.direccion: '',
                    onChanged         : (text) =>  direccion = text,
                    onEditingComplete : ()=>_bloc.changePagina(2)
                    ),
@@ -166,6 +186,8 @@ class FormEmpresaPage extends StatelessWidget {
                     foco              : focoTelefono,
                     leftIcon          : Icons.phone,
                     requerido         : true,
+                    number            : true,
+                    initialValue      : update ? empresa!.telefono : '',
                     onChanged         : (text)=> telefono = text,
                     onEditingComplete : ()=>FocusScope.of(context).requestFocus(focoWhatsap)
                     ),
@@ -174,6 +196,8 @@ class FormEmpresaPage extends StatelessWidget {
                     foco              : focoWhatsap,
                     leftIcon          : Icons.phone_android,
                     requerido         : true,
+                    number            : true,
+                    initialValue      : update ? empresa!.whatsapp : '',
                     onChanged         : (text)=> whatsap = text,
                     onEditingComplete : ()=>FocusScope.of(context).requestFocus(focoCorreo)
                     ),
@@ -183,6 +207,7 @@ class FormEmpresaPage extends StatelessWidget {
                     leftIcon          : Icons.email,
                     requerido         : true,
                     isEmail           : true,
+                    initialValue      : update ? empresa!.email : '',
                     onChanged         : (text)=> correo = text,
                     onEditingComplete : ()=>FocusScope.of(context).requestFocus(focoDWeb)
                     ),
@@ -190,6 +215,7 @@ class FormEmpresaPage extends StatelessWidget {
                     placeholder       : "Sitio Web",
                     foco              : focoDWeb,
                     leftIcon          : Icons.web,
+                    initialValue      : update ? empresa!.web : '',
                     onChanged         : (text)=> web = text,
                     onEditingComplete : ()=>_bloc.changePagina(3)
                     )
@@ -208,14 +234,14 @@ class FormEmpresaPage extends StatelessWidget {
                           children: [
                              InputForm(
                              placeholder  : "Latitud",
-                             controller   : TextEditingController(text: '${state.latitud == null ? '':state.latitud }'),
+                             controller   : TextEditingController(text: getLatitudFormField(state)),
                              readOnly     : true,
                              leftIcon     : Icons.gps_fixed,
                              ),
                              InputForm(
                              placeholder : "Longitud",
                              readOnly    : true,
-                             controller  : TextEditingController(text: '${state.longitud == null ? '':state.longitud }'),
+                             controller  : TextEditingController(text: getLongitudFormField(state)),
                              leftIcon    : Icons.gps_fixed,
                              ),
                              OutlinedButton(
@@ -256,17 +282,13 @@ class FormEmpresaPage extends StatelessWidget {
                   SizedBox(height:20),
                   FloatingActionButton.extended(
                   heroTag         : 'siguiente',
-                  label           : Text('${index == 4 ? 'Crear' : 'Siguiente'}',style: TextStyle(color: Colors.white)),
+                  label           : Text('${index == 4 ? '${update ? 'Actualizar' : 'Crear'}' : 'Siguiente'}',
+                                    style: TextStyle(color: Colors.white)),
                   backgroundColor : Theme.of(context).primaryColor,                           
                   onPressed       :  () async {
-                    _bloc.changePagina(index + 1);
-                    if(index == 4 && formKey.currentState!.validate()){
-                      final empresa  = _getNewEmpresa();
-                      final newEmpresa = await _bloc.addEmpresa(empresa);
-                      if(newEmpresa != null)
-                        context.read<EmpresasBloc>().add(AddEmpresaEvent(empresa: newEmpresa));
-                    }
-                   
+                    if(_bloc.state.logo != null || update)
+                     _bloc.changePagina(index + 1);
+                    _actionButton(index,context);  
                   }
                   )
                  
@@ -322,11 +344,7 @@ class FormEmpresaPage extends StatelessWidget {
                              //bloc: _bloc,
                              builder: (context, state) {
                                return CircleAvatar(
-                                      backgroundColor: state.categoria.id == categorias[i].id
-                                                       ?
-                                                       Colors.red
-                                                       :
-                                                       Colors.grey[400],
+                                      backgroundColor: _getCategoria(state.categoria.id,categorias[i].id),           
                                       child          : Text('$i',style: TextStyle(color:Colors.white)),
                                );
                      },
@@ -347,7 +365,7 @@ class FormEmpresaPage extends StatelessWidget {
           selector : (state) => state.logo,
           builder  : (context,imagen){
             final url = context.read<HomeCubit>().urlImagenes;
-            if(update)
+            if(update &&  imagen == null)
              return ClipRRect(
                      borderRadius: BorderRadius.circular(300),
                      child:  FadeInImage(
@@ -398,7 +416,7 @@ class FormEmpresaPage extends StatelessWidget {
       Position position = await Geolocator.getCurrentPosition();
       return position;
     } catch (error) {
-      snacKBar('Habilita Permisos',context,'Habilitar',() async {
+      snacKBar('Habilita Permisos',context,action: 'Habilitar',onPressed: () async {
         await Geolocator.openAppSettings();
       });
       return null;
@@ -419,21 +437,113 @@ class FormEmpresaPage extends StatelessWidget {
 
  Empresa _getNewEmpresa(){
    return Empresa(
-          nombre      : nombre,
-          nit         : nit,
-          descripcion : descripcion,
-          direccion   : direccion,
-          telefono    : telefono,
-          whatsapp    : whatsap,
-          email       : correo,
-          web         : web,
+          nombre      : nombre!,
+          nit         : nit!,
+          descripcion : descripcion!,
+          direccion   : direccion!,
+          telefono    : telefono!,
+          whatsapp    : whatsap!,
+          email       : correo!,
+          web         : web ?? '',
           estado      : false, 
           urlLogo     : '',
           idCategoria : _bloc.state.categoria.id,
-          idUsuario   : 0
+          idUsuario   : 0,
+          latitud     : _bloc.state.latitud.toString(),
+          longitud    : _bloc.state.longitud.toString()
+   );
+ }
+ 
+ Empresa _getUpdateEmpresa(){
+   return Empresa(
+          id          : empresa!.id,
+          nombre      : nombre      ?? empresa!.nombre,
+          nit         : nit         ?? empresa!.nit,
+          descripcion : descripcion ?? empresa!.descripcion,
+          direccion   : direccion   ?? empresa!.direccion,
+          telefono    : telefono    ?? empresa!.telefono,
+          whatsapp    : whatsap     ?? empresa!.whatsapp,
+          email       : correo      ?? empresa!.email,
+          web         : web         ?? empresa!.web,
+          estado      : false, 
+          urlLogo     : empresa!.urlLogo,
+          idCategoria : _bloc.state.categoria.id == -1
+                        ? empresa!.idCategoria
+                        :_bloc.state.categoria.id,
+          idUsuario   : empresa!.idUsuario,
+          latitud     : _bloc.state.latitud == null
+                        ? empresa!.latitud
+                        : _bloc.state.latitud.toString(),
+          longitud    : _bloc.state.longitud == null
+                        ? empresa!.longitud
+                        : _bloc.state.longitud.toString()
+
    );
  }
 
+ String getLatitudFormField(FormEmpresaState state){
+   if(update)
+    return empresa!.latitud;
+   if(state.latitud == null)
+    return '';
+    return state.latitud.toString();
+ }
+
+ String getLongitudFormField(FormEmpresaState state){
+   if(update)
+    return empresa!.longitud;
+   if(state.longitud == null)
+    return '';
+   return state.longitud.toString();
+ }
+
+  _getCategoria(int idStateCategoria, int idCategoria) {
+    if(idStateCategoria == idCategoria)
+      return Colors.red;
+    if(update && empresa!.idCategoria == idCategoria && idStateCategoria == -1)
+      return Colors.red;
+    return  Colors.grey[400];
+  }
+
+  void _actionButton(int index,BuildContext context) async { 
+
+    if(index == 4 && formKey.currentState!.validate()){
+       if(!update && _bloc.state.categoria.id != -1){
+        final empresa  = _getNewEmpresa();
+        final newEmpresa = await _bloc.addEmpresa(empresa);
+        if(newEmpresa != null)
+        context.read<EmpresasBloc>().add(AddEmpresaEvent(empresa: newEmpresa));
+       }
+       if(update){
+        final empresa  = _getUpdateEmpresa();
+        final url = context.read<HomeCubit>().urlImagenes;
+        //final newEmpresa = await _bloc.addEmpresa(empresa);
+        context.read<EmpresasBloc>().add(UpdateEmpresaEvent(empresa: empresa,url: url));
+       }
+       
+    }
+  }
 }
 
+class _DialogoError extends StatelessWidget {
+  const _DialogoError({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+           title:   const Text('Error al Crear la empresa'),
+           content: const Text('verifica el correo y el nit estos deben ser unicos o tu conexion a internet'),
+           actions: [
+             ElevatedButton(
+               child: const Text('Cerrar'),
+               style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).primaryColor,
+                      textStyle: TextStyle(color: Colors.white)
+               ),
+               onPressed: () => NavigationService().back())
+             
+           ],
+    );
+  }
+}
 

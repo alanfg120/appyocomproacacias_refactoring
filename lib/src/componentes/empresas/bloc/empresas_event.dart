@@ -30,5 +30,18 @@ class AddEmpresaEvent  extends EmpresasEvent {
   @override
   List<Object> get props => [empresa];
 }
+class DeleeteEmpresaEvent  extends EmpresasEvent {
+  final int idEmpresa;
+  DeleeteEmpresaEvent({required this.idEmpresa});
+  @override
+  List<Object> get props => [idEmpresa];
+}
+class UpdateEmpresaEvent  extends EmpresasEvent {
+  final Empresa empresa;
+  final String url;
+  UpdateEmpresaEvent({required this.empresa,required this.url});
+  @override
+  List<Object> get props => [empresa];
+}
 
 
