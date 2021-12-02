@@ -1,3 +1,4 @@
+import 'package:appyocomproacacias_refactoring/src/componentes/categorias/bloc/categorias_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/data/empresa.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/response.model.dart';
@@ -46,6 +47,15 @@ class EmpresasBloc extends Bloc<EmpresasEvent, EmpresasState> {
       if(response is ErrorResponseHttp){
         print('Ocurrio un error');
       }
+    });
+    
+    on<GetEmpresas>((event,emit){
+      emit(state.copyWith(empresas: event.empresas));
+    });
+    on<AddEmpresaEvent>((event,emit){
+      emit(state.copyWith(
+        empresas: List.of(state.empresas)..add(event.empresa)
+      ));
     });
   }
 }

@@ -72,10 +72,10 @@ class MyApp extends StatelessWidget {
              create: (context) => PublicacionesCubit(repositorio: PublicacionesRepositorio(),prefs:PreferenciasUsuario()),
              ),
              BlocProvider<EmpresasBloc>(
-             create: (context) => EmpresasBloc(repositorio: EmpresaRepositorio(),prefs:PreferenciasUsuario()),
+             create: (context) => EmpresasBloc(repositorio: EmpresaRepositorio(),prefs:PreferenciasUsuario())..add(GetEmpresas(empresas: homeCubit!.state.usuario!.empresas)),
              ),
              BlocProvider<CategoriasBloc>(
-             create: (context) => CategoriasBloc(CategoriaRepositorio()),
+             create: (context) => CategoriasBloc(CategoriaRepositorio())..add(GetCategoriasEvent()),
              ),
              BlocProvider.value(
              value: homeCubit!

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.state.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/data/home.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/models/home.response.model.dart';
@@ -84,10 +85,18 @@ class HomeCubit extends Cubit<HomeState> {
     }
     return false;
   }
+  
   Future logOut() async {
     preferencias.eraseall();
     await googleLogOut();
     await FacebookAuth.instance.logOut();
     emit(state.copyWith(currentUsuario: TipoUsuario.NOT_LODGET,page: 0));
+  }
+  
+  Future addEmpresa(Empresa empresa) async {
+   final usuario = state.usuario!.copyWith(
+     empresas: List.of(state.usuario!.empresas)..add(empresa.copyWith(urlLogo: '${empresa.id}_logo_empresa.jpg'))
+   );
+   emit(state.copyWith(usuario: usuario));
   }
 }

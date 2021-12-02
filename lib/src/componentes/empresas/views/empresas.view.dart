@@ -1,6 +1,9 @@
+import 'package:appyocomproacacias_refactoring/src/componentes/empresas/bloc/empresas_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/empresas/views/formEmpresa.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.state.dart';
+import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,13 +20,14 @@ class EmpresasPage extends StatelessWidget {
                    title     : Text('Tus Empresas'),
                    elevation : 0,
            ),
-           body: BlocSelector<HomeCubit,HomeState,List<Empresa>>(
-                 selector : (state) => state.usuario!.empresas,
+           body: BlocSelector<EmpresasBloc,EmpresasState,List<Empresa>>(
+                 selector : (state) => state.empresas,
                  builder  : (context,empresas){
                     if(empresas.length == 0)
                       return Center(child: Text('No hay empresas'));
-                    return ListView.builder(
-                           padding: const EdgeInsets.all(10),
+                    return ListView.separated(
+                           separatorBuilder: (_,i) => SizedBox(height: 15),
+                           padding: const EdgeInsets.all(15),
                            itemCount: empresas.length,
                            itemBuilder: (_,i){
                              return _EmpresaList(empresa: empresas[i]);
@@ -36,7 +40,11 @@ class EmpresasPage extends StatelessWidget {
                                    backgroundColor : Theme.of(context).primaryColor,
                                    label           : Text('Crear',style: TextStyle(color: Colors.white)),
                                    tooltip         : 'Crea una Empresa',
-                                   onPressed       : (){}
+                                   onPressed       : context.read<HomeCubit>().state.usuario!.empresas.length >= 6
+                                                     ? null
+                                                     : () => NavigationService().navigateToRoute(
+                                                             MaterialPageRoute(builder: (context) => FormEmpresaPage())
+                                                     )
                                    ),
     );
   }
@@ -81,7 +89,6 @@ class _EmpresaList extends StatelessWidget {
     );
 }
 }
-
 class _DialogoDelete extends StatelessWidget {
   const _DialogoDelete({Key? key}) : super(key: key);
 

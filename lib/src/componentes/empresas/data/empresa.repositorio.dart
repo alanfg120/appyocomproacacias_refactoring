@@ -38,12 +38,9 @@ class EmpresaRepositorio {
     try {
       final response =
           await this._dio.get<List>('/calificaciones/empresa/$idEmpresa');
-      final calificaciones = response.data
-          ?.map<Calificacion>(
-              (calificacion){
-                return Calificacion.toJson(calificacion);
-              })
-          .toList();
+      final calificaciones = response.data?.map<Calificacion>((calificacion) {
+        return Calificacion.toJson(calificacion);
+      }).toList();
       return ResponseEmpresa(calificaciones: calificaciones);
     } on DioError catch (error) {
       return ErrorResponseHttp(error);
@@ -75,13 +72,12 @@ class EmpresaRepositorio {
     }
   }
 
-  Future<ResponseHttp> calificarEmpresa(
-      int idUsuario, int idEmpresa, int extrellas,int idDestinatario,
-      String comentario) async {
+  Future<ResponseHttp> calificarEmpresa(int idUsuario, int idEmpresa,
+      int extrellas, int idDestinatario, String comentario) async {
     final data = jsonEncode({
       "id_usuario": idUsuario,
       "id_empresa": idEmpresa,
-      "extrellas" : extrellas,
+      "extrellas": extrellas,
       "comentario": comentario,
       "id_usuario_destinatario": idDestinatario
     });
@@ -91,19 +87,18 @@ class EmpresaRepositorio {
     } on DioError catch (error) {
       return ErrorResponseHttp(error);
     }
-    }
-
- Future<ResponseHttp> getEmpresaByid(int idEmpresa) async {
-   try {
-    final response = await this._dio.get('/empresas/id/$idEmpresa');
-    return ResponseEmpresa(empresa: Empresa.toJson(response.data));
-   } on DioError  catch (error) {
-     return ErrorResponseHttp(error);
-   }
-    
   }
- 
- Future<ResponseHttp> registrarVisitaEmpresa(
+
+  Future<ResponseHttp> getEmpresaByid(int idEmpresa) async {
+    try {
+      final response = await this._dio.get('/empresas/id/$idEmpresa');
+      return ResponseEmpresa(empresa: Empresa.toJson(response.data));
+    } on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  }
+
+  Future<ResponseHttp> registrarVisitaEmpresa(
       int idEmpresa, int idUsuario) async {
     try {
       FormData data =
@@ -114,7 +109,26 @@ class EmpresaRepositorio {
       return ErrorResponseHttp(error);
     }
   }
- 
+
+  Future<ResponseHttp> addEmpresa(Empresa empresa, int idUsuario, String path,
+      ) async {
+    FormData data = FormData.fromMap({
+      ...empresa.toMap(idUsuario),
+      "file": await MultipartFile.fromFile(path, filename: "imagen.jpg")
+    });
+    try {
+      final response = await this._dio.post(
+        '/empresas/add/',
+        data: data,
+        options: Options(contentType: 'multipart/form-data'),
+      );
+      print(response.data);
+      return ResponseEmpresa(id: response.data['id']);
+    } on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  }
+
   /*  Future<List<Producto>> getProductosByEmpresa(int idproductos) async {
     final response = await this._dio.get('/productos/empresa/$idproductos');
     return response.data
@@ -240,8 +254,6 @@ class EmpresaRepositorio {
       return ErrorResponse(error);
     }
   } */
-
- 
 
   /* Future<ResponseModel> registrarVisitaEmpresa(
       int idEmpresa, int idUsuario) async {

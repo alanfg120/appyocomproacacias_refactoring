@@ -1,3 +1,4 @@
+import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/imageFile.model.dart';
 import 'package:equatable/equatable.dart';
 
 class Empresa extends Equatable {
@@ -5,7 +6,6 @@ class Empresa extends Equatable {
   final int idCategoria, idUsuario;
   final String nombre,
       urlLogo,
-      urlPortada,
       descripcion,
       direccion,
       telefono,
@@ -13,9 +13,10 @@ class Empresa extends Equatable {
       email,
       nit,
       web;
-  final String latitud, longitud;
-  final int popular;
+  final String latitud,longitud;
   final bool estado;
+  final ImageFile? imagen;
+  
   Empresa(
       {this.id,
       required this.idCategoria,
@@ -23,24 +24,22 @@ class Empresa extends Equatable {
       required this.nombre,
       required this.nit,
       required this.urlLogo,
-      required this.urlPortada,
       required this.descripcion,
       required this.direccion,
       required this.telefono,
       required this.whatsapp,
       required this.email,
-      required this.latitud,
-      required this.longitud,
-      required this.popular,
+      this.latitud  =  '',
+      this.longitud =  '',
       required this.estado,
-      required this.web});
+      this.web = '',
+      this.imagen});
 
   factory Empresa.toJson(Map<String, dynamic> json) => Empresa(
       id          : json['id']          ?? 0,
       nombre      : json['nombre']      ?? '',
       nit         : json['NIT']         ?? '',
       urlLogo     : json['logo']        ?? '',
-      urlPortada  : json['portada']     ?? '',
       descripcion : json['descripcion'] ?? '',
       direccion   : json['direccion']   ?? '',
       telefono    : json['telefono']    ?? '',
@@ -49,7 +48,6 @@ class Empresa extends Equatable {
       web         : json['web']         ?? '',
       latitud     : json['latitud']     ?? '',
       longitud    : json['longitud']    ?? '',
-      popular     : json['popular']     ?? 0,
       estado      : json['estado']      ?? false,
       idCategoria : json['id_categoria'],
       idUsuario   : json['id_usuario']);
@@ -59,7 +57,6 @@ class Empresa extends Equatable {
     int? idCategoria,
     String? nombre,
     String? urlLogo,
-    String? urlPortada,
     String? descripcion,
     String? direccion,
     String? telefono,
@@ -78,7 +75,6 @@ class Empresa extends Equatable {
       idCategoria : idCategoria ?? this.idCategoria,
       nombre      : nombre      ?? this.nombre,
       urlLogo     : urlLogo     ?? this.urlLogo,
-      urlPortada  : urlPortada  ?? this.urlPortada,
       descripcion : descripcion ?? this.descripcion,
       direccion   : direccion   ?? this.direccion,
       telefono    : telefono    ?? this.telefono,
@@ -87,7 +83,6 @@ class Empresa extends Equatable {
       web         : web         ?? this.web,
       latitud     : latitud     ?? this.latitud,
       longitud    : longitud    ?? this.longitud,
-      popular     : popular     ?? this.popular,
       estado      : estado      ?? this.estado,
       idUsuario   : idUsuario   ?? this.idUsuario,
       nit         : nit         ?? this.nit);
@@ -97,7 +92,6 @@ class Empresa extends Equatable {
         'nombre': nombre,
         'NIT': nit,
         'logo': urlLogo,
-        'portada': urlPortada,
         'descripcion': descripcion,
         'direccion': direccion,
         'telefono': telefono,
@@ -106,7 +100,6 @@ class Empresa extends Equatable {
         'web': web,
         'latitud': latitud,
         'longitud': longitud,
-        'popular': popular,
         'estado': estado,
         'id_usuario': idUsuario,
         'id_categoria': idCategoria,
@@ -119,7 +112,6 @@ class Empresa extends Equatable {
         idUsuario,
         nombre,
         urlLogo,
-        urlPortada,
         descripcion,
         direccion,
         telefono,
@@ -129,7 +121,6 @@ class Empresa extends Equatable {
         web,
         latitud,
         longitud,
-        popular,
         estado
       ];
 }
