@@ -196,7 +196,7 @@ class _Perfil extends StatelessWidget {
              width  : 100,
              fit    : BoxFit.cover,
              placeholder: AssetImage('assets/imagenes/load_image.gif'), 
-             image: AssetImage('assets/imagenes/logo_no_image.png'),
+             image: AssetImage('assets/imagenes/logo_no_img.png'),
       );
    
   }

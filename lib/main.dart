@@ -9,6 +9,8 @@ import 'package:appyocomproacacias_refactoring/src/componentes/inicio/cubit/inic
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/data/inicio.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/login/cubit/login.cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/login/data/login.repositorio.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/data/productos.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/publicaciones_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/data/publicaciones.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/cubit/usuario_cubit.dart';
@@ -82,6 +84,9 @@ class MyApp extends StatelessWidget {
              ),
              BlocProvider<UsuarioCubit>(
              create: (context) => UsuarioCubit(usuario: homeCubit!.state.usuario!,repocitorio: UsuarioRepocitorio()),
+             ),
+             BlocProvider<ProductosBloc>(
+             create: (context) => ProductosBloc(repocitorio: ProductosRepositorio(),prefs: PreferenciasUsuario()),
              ),
            ],
            child: BlocSelector<HomeCubit,HomeState,bool>(

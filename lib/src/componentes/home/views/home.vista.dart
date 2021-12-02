@@ -6,6 +6,8 @@ import 'package:appyocomproacacias_refactoring/src/componentes/home/models/usuar
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/cubit/inicio.cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/views/inicio.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/login/views/login.view.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/views/tienda.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/publicaciones_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/views/publicaciones.page.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/views/usuario.view.dart';
@@ -21,11 +23,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit,HomeState>(
-           listener: (context,state){
-             if(state.currentUsuario == TipoUsuario.LODGET)
-              print('getNotificaciones');
-           },
+    return BlocBuilder<HomeCubit,HomeState>(
            builder: (contex,state) {
                       return Scaffold(
                              body     : IndexedStack(
@@ -35,7 +33,7 @@ class HomePage extends StatelessWidget {
                                                    LoginPage(),
                                                    InicioPage(),
                                                    if(state.currentUsuario == TipoUsuario.LODGET)
-                                                   Container(),
+                                                   TiendaPage(),
                                                    PublicacionesPage(),
                                                    CategoriasPage(),
                                                    if(state.currentUsuario == TipoUsuario.LODGET)
@@ -106,7 +104,7 @@ class HomePage extends StatelessWidget {
    }
    if(usuario == TipoUsuario.LODGET){
      if(index == 0) context.read<InicioCubit>().getDataInitial(homeCubit.state.currentUsuario);
-     if(index == 1) print('Initial Data Tienda');
+     if(index == 1) context.read<ProductosBloc>().add(GetProductosEvent());
      if(index == 2) context.read<PublicacionesCubit>().getInitiData();
    }
   }
