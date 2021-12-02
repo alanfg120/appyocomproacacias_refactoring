@@ -73,7 +73,7 @@ class FormEmpresaPage extends StatelessWidget {
                             if(state.add){
                               NavigationService().back();
                                snacKBar(
-                               'Empresa Creada',
+                               'Empresa ${update ? 'Actulizada' : 'Creada'}',
                                 context,
                                 action: 'Aceptar',
                                 onPressed: ()=> NavigationService().back(),
@@ -482,15 +482,15 @@ class FormEmpresaPage extends StatelessWidget {
  }
 
  String getLatitudFormField(FormEmpresaState state){
-   if(update)
+   if(update && state.latitud == null)
     return empresa!.latitud;
    if(state.latitud == null)
     return '';
-    return state.latitud.toString();
+   return state.latitud.toString();
  }
 
  String getLongitudFormField(FormEmpresaState state){
-   if(update)
+   if(update && state.latitud == null)
     return empresa!.longitud;
    if(state.longitud == null)
     return '';
@@ -517,10 +517,13 @@ class FormEmpresaPage extends StatelessWidget {
        if(update){
         final empresa  = _getUpdateEmpresa();
         final url = context.read<HomeCubit>().urlImagenes;
-        //final newEmpresa = await _bloc.addEmpresa(empresa);
-        context.read<EmpresasBloc>().add(UpdateEmpresaEvent(empresa: empresa,url: url));
+        final updateEmpresa = await _bloc.updateEmpresa(empresa);
+        if(updateEmpresa!)
+          context.read<EmpresasBloc>().add(UpdateEmpresaEvent(empresa: empresa,url: url));
        }
-       
+    }
+    if(index == 4 && !formKey.currentState!.validate()){
+      snacKBar('Verfica los datos Ingresados', context);
     }
   }
 }

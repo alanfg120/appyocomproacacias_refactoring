@@ -129,7 +129,6 @@ class EmpresaRepositorio {
     }
   }
 
-
   Future<ResponseHttp> deleteEmpresa(int id) async {
     try {
       final response = await this._dio.delete('/empresas/delete/$id');
@@ -139,6 +138,21 @@ class EmpresaRepositorio {
     }
   }
 
+  Future<ResponseHttp> updateEmpresa(Empresa empresa, int idUsuario,
+      {String? path}) async {
+    try {
+      FormData data = FormData.fromMap({
+        ...empresa.toMap(idUsuario),
+        "file": path == null
+            ? null
+            : await MultipartFile.fromFile(path, filename: "imagen.jpg")
+      });
+      final response = await this._dio.put('/empresas/update', data: data);
+      return ResponseEmpresa(update: response.data['update']);
+    } on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  }
   /*  Future<List<Producto>> getProductosByEmpresa(int idproductos) async {
     final response = await this._dio.get('/productos/empresa/$idproductos');
     return response.data

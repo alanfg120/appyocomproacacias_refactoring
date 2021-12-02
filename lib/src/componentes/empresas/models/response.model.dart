@@ -12,7 +12,7 @@ class ResponseEmpresa extends ResponseHttp {
   final List<Calificacion>? calificaciones;
   final Calificacion? calificacion;
   final Empresa? empresa;
-  final bool? visita,delete;
+  final bool? visita,delete,update;
   final int? id;
 
   ResponseEmpresa(
@@ -24,5 +24,6 @@ class ResponseEmpresa extends ResponseHttp {
        this.empresa,
        this.visita,
        this.delete,
+       this.update,
        this.id});
 }
