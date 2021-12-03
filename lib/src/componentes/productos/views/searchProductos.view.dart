@@ -47,6 +47,7 @@ class _SearchProductosPageState extends State<SearchProductosPage> {
             body: BlocBuilder<ProductosBloc,ProductosState>(
                   bloc   : _bloc,
                   builder: (context,state){
+                     final url = context.read<HomeCubit>().urlImagenes;
                     if(state.loadingSearch)
                       return LoadingSearchProductos();
                     if(state.resulProductos.length == 0)
@@ -61,7 +62,7 @@ class _SearchProductosPageState extends State<SearchProductosPage> {
     return ListView.builder(
            itemCount   : productos.length,
            itemBuilder : (context,index) {
-               return CardProducto(producto: productos[index]);
+               return CardProducto(producto: productos[index],url: url);
            }
     );
   }

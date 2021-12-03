@@ -1,3 +1,4 @@
+import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/widgets/cardProducto.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/widgets/loadingProductos.widget.dart';
@@ -121,6 +122,7 @@ class __ProductosListState extends State<_ProductosList> {
                   padding : const EdgeInsets.all(4),
                   child   : BlocBuilder<ProductosBloc, ProductosState>(
                          builder: (context, state) {
+                              final url = context.read<HomeCubit>().urlImagenes;
                               return RefreshIndicator(
                                      onRefresh: () async => context.read<ProductosBloc>().add(GetNewProductosEvent()),
                                      child    : ListView.separated(
@@ -131,7 +133,7 @@ class __ProductosListState extends State<_ProductosList> {
                                                   if(index == state.productos.length ){
                                                     return LoadingCardProducto();
                                                   }
-                                                  return  CardProducto(producto: state.productos[index]);
+                                                  return  CardProducto(producto: state.productos[index],url: url);
                                                 }
                                                    
                                        

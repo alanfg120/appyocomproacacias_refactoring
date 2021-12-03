@@ -1,13 +1,17 @@
 
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/producto.model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CardProducto extends StatelessWidget {
+  final String url;
   final Producto producto;
-  const CardProducto({Key? key,required this.producto}) : super(key: key);
+  
+  const CardProducto({Key? key,required this.producto,required this.url}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
            constraints: BoxConstraints(minHeight: 190),
            child : Card(
@@ -17,11 +21,24 @@ class CardProducto extends StatelessWidget {
                           padding : const EdgeInsets.symmetric(vertical: 20),
                           child   : Row(
                           children: [
-                            SizedBox(
-                            width  : 150,
-                            height : 100,
-                            child: FlutterLogo()
+                            ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child  : producto.imagenes.length == 0
+                                     ? Image.asset(
+                                       'assets/imagenes/no_product.png',
+                                       width : 150,
+                                       height : 150,
+                                     )
+                                     : CachedNetworkImage(
+                                     width  : 150,
+                                     height : 150,
+                                     imageUrl    : '$url/galeria/${producto.imagenes[0]}',
+                                     placeholder : (context, url) =>  Image.asset('assets/imagenes/load_image.gif'),
+                                     errorWidget : (context, url, error) => Icon(Icons.error),
+                                     fit         : BoxFit.cover,
+                            )
                             ),
+                            SizedBox(width: 10),
                             Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,

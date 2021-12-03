@@ -79,17 +79,47 @@ class ProductosBloc extends Bloc<ProductosEvent, ProductosState> {
     }, transformer: debounce(Duration(milliseconds: 400)));
 
     on<GetOfertasProductosEvent>((event, emit) async {
-      final response =
-          await repocitorio.getAllProductos(state.paginaOfertas, oferta: true);
+      final response = await repocitorio
+          .getAllProductos(event.news ? 0 : state.paginaOfertas, oferta: true);
       if (response is ResponseProductos) {
+        final ofertas =
+            _getOfertas(event.news, state.ofertas, response.productos);
         emit(state.copyWith(
-            ofertas: List.of(state.ofertas)..addAll(response.productos!),
-            paginaOfertas: state.paginaOfertas + 1,
+            ofertas: ofertas,
+            paginaOfertas: event.news ? 1 : state.paginaOfertas + 1,
             loadingOfertas: false));
       }
       if (response is ErrorResponseHttp) {
         print(response.getError);
       }
     });
+
+    on<GetProductosByCategoriaEvent>((event, emit) async {
+      final response =
+          await repocitorio.getAllProductosByCategoria(event.idCategoria);
+      if (response is ResponseProductos) {
+        emit(state.copyWith(
+            resulProductos: List.of(state.resulProductos)
+              ..addAll(response.productos!),
+            loadingProductos: false));
+      }
+      if (response is ErrorResponseHttp) {
+        print(response.getError);
+      }
+    });
   }
+
+ 
+  List<Producto> _getOfertas(
+      bool news, List<Producto> ofertas, List<Producto>? productos) {
+    List<Producto> ofertas;
+    if (news) {
+      ofertas = productos!;
+    } else {
+      ofertas = List.of(state.ofertas);
+      ofertas.addAll(productos!);
+    }
+    return ofertas;
+  }
+
 }

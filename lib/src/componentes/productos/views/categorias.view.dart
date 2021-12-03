@@ -1,5 +1,7 @@
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/views/productosCategoria.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/widgets/loadingCategorias.dart';
+import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,7 +35,9 @@ class CategoriasProductosPage extends StatelessWidget {
                                            contentPadding : EdgeInsets.symmetric(horizontal: 30,vertical: 5),
                                            title          : Text(state.categorias[index].nombre,style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500)),
                                            trailing       : Icon(Icons.arrow_forward_ios),
-                                           onTap          : (){},
+                                           onTap          : () => NavigationService().navigateToRoute(
+                                              MaterialPageRoute(builder: (context) => ProductosByCategoriaList(categoria: state.categorias[index]))
+                                           ),
                                     );
                             },
                           ),

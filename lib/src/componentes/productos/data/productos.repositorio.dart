@@ -46,6 +46,17 @@ class ProductosRepositorio {
     }
   }
 
+   Future<ResponseHttp> getAllProductosByCategoria(int idCategoria) async {
+    try {
+      final response = await this._dio.get('/productos/categoria/$idCategoria');
+      final productos = response.data.map<Producto>((producto)=>Producto.toJson(producto)).toList();
+      return ResponseProductos(productos: productos);
+    } on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  }
+
+  
   /* Future<ResponseModel> addProducto(
       Producto producto, int idEmpresa, List<ImageFile> imagenes) async {
     try {
