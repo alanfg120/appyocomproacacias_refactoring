@@ -47,7 +47,7 @@ class _SearchProductosPageState extends State<SearchProductosPage> {
             body: BlocBuilder<ProductosBloc,ProductosState>(
                   bloc   : _bloc,
                   builder: (context,state){
-                    if(state.loadingProductos)
+                    if(state.loadingSearch)
                       return LoadingSearchProductos();
                     if(state.resulProductos.length == 0)
                       return Center(child: const Text('Sin resultados'));

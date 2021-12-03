@@ -80,7 +80,10 @@ class _Tabs extends StatelessWidget {
             _TapItem(
              titulo: 'Ofertas', 
              icon: Icons.star_border_outlined, 
-             onTap: (){}
+             onTap: (){
+               NavigationService().navigateTo('ofertas');
+               context.read<ProductosBloc>().add(GetOfertasProductosEvent());
+             }
              ),
              SizedBox(width: 10),
             _TapItem(

@@ -9,7 +9,7 @@ class CardProducto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-           height: 192,
+           constraints: BoxConstraints(minHeight: 190),
            child : Card(
                    elevation: 1,
                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

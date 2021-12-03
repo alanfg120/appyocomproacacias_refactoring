@@ -12,6 +12,8 @@ class GetInitialData extends ProductosEvent {}
 
 class GetNewProductosEvent extends ProductosEvent {}
 
+class GetOfertasProductosEvent extends ProductosEvent {}
+
 class GetCategoriasProductoEvent extends ProductosEvent {}
 
 class SearchProductoEvent extends ProductosEvent {

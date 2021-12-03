@@ -69,13 +69,27 @@ class ProductosBloc extends Bloc<ProductosEvent, ProductosState> {
 
     on<SearchProductoEvent>((event, emit) async {
       if (event.texto.length > 3) {
-        emit(state.copyWith(loadingProductos: true));
+        emit(state.copyWith(loadingSearch: true));
         final response = await repocitorio.searchProductos(event.texto);
         if (response is ResponseProductos) {
           emit(state.copyWith(
-              resulProductos: response.productos, loadingProductos: false));
+              resulProductos: response.productos, loadingSearch: false));
         }
       }
     }, transformer: debounce(Duration(milliseconds: 400)));
+
+    on<GetOfertasProductosEvent>((event, emit) async {
+      final response =
+          await repocitorio.getAllProductos(state.paginaOfertas, oferta: true);
+      if (response is ResponseProductos) {
+        emit(state.copyWith(
+            ofertas: List.of(state.ofertas)..addAll(response.productos!),
+            paginaOfertas: state.paginaOfertas + 1,
+            loadingOfertas: false));
+      }
+      if (response is ErrorResponseHttp) {
+        print(response.getError);
+      }
+    });
   }
 }
