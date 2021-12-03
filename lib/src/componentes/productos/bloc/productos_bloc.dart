@@ -16,22 +16,23 @@ class ProductosBloc extends Bloc<ProductosEvent, ProductosState> {
   ProductosBloc({required this.repocitorio, required this.prefs})
       : super(ProductosState.initial()) {
     on<GetProductosEvent>((event, emit) async {
-      if (!state.getInitaialData) {
+      
         emit(state.copyWith(loadingProductos: true));
         final response =
             await repocitorio.getAllProductos(state.paginaProductos);
         if (response is ResponseProductos) {
           emit(state.copyWith(
-              productos: response.productos,
+              productos: List.of(state.productos)..addAll(response.productos!),
+              paginaProductos: state.paginaProductos + 1,
               loadingProductos: false,
               getInitaialData: true));
         }
         if (response is ErrorResponseHttp) {
           print(response.getError);
         }
-      }
+      
     });
-   
+
     on<GetCategoriasProductoEvent>((event, emit) async {
       if (state.categorias.length == 0) {
         emit(state.copyWith(loadingCategorias: true));
@@ -39,12 +40,27 @@ class ProductosBloc extends Bloc<ProductosEvent, ProductosState> {
         final response = await repocitorio.getCategorias();
         if (response is ResponseProductos) {
           emit(state.copyWith(
-              categorias: response.categorias,loadingCategorias: false));
+              categorias: response.categorias, loadingCategorias: false));
         }
         if (response is ErrorResponseHttp) {
           print(response.getError);
         }
       }
     });
+
+    on<GetNewProductosEvent>((event, emit) async {
+      emit(state.copyWith(loadingProductos: true));
+      final response = await repocitorio.getAllProductos(0);
+      if (response is ResponseProductos) {
+        emit(state.copyWith(
+            productos: response.productos,
+            loadingProductos: false));
+      }
+      if (response is ErrorResponseHttp) {
+        print(response.getError);
+      }
+    });
+  
   }
+
 }

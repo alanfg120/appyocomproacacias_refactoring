@@ -8,4 +8,6 @@ abstract class ProductosEvent extends Equatable {
 
 class GetProductosEvent extends ProductosEvent {}
 
+class GetNewProductosEvent extends ProductosEvent {}
+
 class GetCategoriasProductoEvent extends ProductosEvent {}

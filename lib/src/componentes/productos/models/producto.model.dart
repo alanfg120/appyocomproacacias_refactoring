@@ -1,5 +1,6 @@
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/categoriaProducto.model.dart';
+import 'package:intl/intl.dart';
 
 class Producto {
   final int? id;
@@ -10,6 +11,8 @@ class Producto {
   final Empresa empresa;
   final CategoriaProducto categoria;
 
+  String get precioFormat => NumberFormat.simpleCurrency(locale: 'en',decimalDigits: 0).format(this.precio);
+  
   Producto({
      this.id,
      required this.nombre,  

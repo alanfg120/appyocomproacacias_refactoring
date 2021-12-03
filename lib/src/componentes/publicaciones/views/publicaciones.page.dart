@@ -26,6 +26,12 @@ class _PublicacionesPageState extends State<PublicacionesPage> {
   }
 
   @override
+  void dispose() {
+    if(_controller.hasClients)
+     _controller.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
    
 

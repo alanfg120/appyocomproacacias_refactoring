@@ -1,4 +1,5 @@
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/widgets/cardProducto.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ class TiendaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+           backgroundColor: Colors.grey[100],
            appBar: AppBar(
                    title     : const Text('Tienda'),
                    elevation : 0,
@@ -19,7 +21,12 @@ class TiendaPage extends StatelessWidget {
                            crossAxisAlignment : CrossAxisAlignment.start,
                            children: [
                              _BarSearch(),
-                             _Tabs()
+                             _Tabs(),
+                             Padding(
+                               padding: const EdgeInsets.all(8.0),
+                               child: Text('Productos',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                             ),
+                             _ProductosList()
                            ],
              ),
             ),
@@ -80,7 +87,63 @@ class _Tabs extends StatelessWidget {
     );
   }
 }
+class _ProductosList extends StatefulWidget {
 
+  const _ProductosList({Key? key}) : super(key: key);
+
+  @override
+  __ProductosListState createState() => __ProductosListState();
+}
+
+class __ProductosListState extends State<_ProductosList> {
+
+  ScrollController _controller = ScrollController();
+  @override
+  void initState() {
+    _controller.addListener(_scrollListener);
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+           child: Padding(
+                  padding : const EdgeInsets.all(4),
+                  child   : BlocBuilder<ProductosBloc, ProductosState>(
+                         builder: (context, state) {
+                              return RefreshIndicator(
+                                     onRefresh: () async => context.read<ProductosBloc>().add(GetNewProductosEvent()),
+                                     child    : ListView.separated(
+                                                controller: _controller,
+                                                separatorBuilder: (_,i) => SizedBox(height: 0),
+                                                itemCount: state.productos.length + 1,
+                                                itemBuilder: (BuildContext context, int index) {
+                                                  if(index == state.productos.length ){
+                                               return Center(
+                                                      child: Container(
+                                                             padding : EdgeInsets.all(10),
+                                                             child   : CircularProgressIndicator(),
+                                                             )
+                                                 );
+                                          }
+                                                  return  CardProducto(producto: state.productos[index]);
+                                                }
+                                                   
+                                       
+                                     ),
+                              );
+                            },
+                  ),
+        ),
+      );
+  }
+  
+
+  void _scrollListener() {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent){
+       context.read<ProductosBloc>().add(GetProductosEvent());
+   }
+  }
+}
 class _TapItem extends StatelessWidget {
   final String titulo;
   final IconData icon;
