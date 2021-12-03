@@ -104,7 +104,7 @@ class HomePage extends StatelessWidget {
    }
    if(usuario == TipoUsuario.LODGET){
      if(index == 0) context.read<InicioCubit>().getDataInitial(homeCubit.state.currentUsuario);
-     if(index == 1) context.read<ProductosBloc>().add(GetProductosEvent());
+     if(index == 1) context.read<ProductosBloc>().add(GetInitialData());
      if(index == 2) context.read<PublicacionesCubit>().getInitiData();
    }
   }

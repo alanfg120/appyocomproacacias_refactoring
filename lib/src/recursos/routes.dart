@@ -8,6 +8,7 @@ import 'package:appyocomproacacias_refactoring/src/componentes/login/views/inici
 import 'package:appyocomproacacias_refactoring/src/componentes/login/views/login.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/login/views/registro.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/views/categorias.view.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/views/searchProductos.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/views/help.view.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,7 @@ import 'package:flutter/material.dart';
                 'loginForm'           : (context) => LoginFormPage(),
                 'registro'            : (context) => RegistroFormPage(),
                 'search_empresa'      : (context) => SearchEmpresasPage(),
+                'search_producto'     : (context) => SearchProductosPage(),
                 'offline'             : (context) => OfflinePage(),
                 'notificaciones'      : (context) => NotificationPage(),
                 'categorias'          : (context) => ListCategoriasPage(),

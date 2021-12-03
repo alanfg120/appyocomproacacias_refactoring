@@ -1,5 +1,6 @@
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/widgets/cardProducto.widget.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/widgets/loadingProductos.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +27,14 @@ class TiendaPage extends StatelessWidget {
                                padding: const EdgeInsets.all(8.0),
                                child: Text('Productos',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                              ),
-                             _ProductosList()
+                             BlocSelector<ProductosBloc, ProductosState, bool>(
+                               selector: (state) => state.loadingProductos,
+                               builder: (context, loading) {
+                                 if(loading)
+                                   return LoadingProductos();
+                                 return _ProductosList();
+                               },
+                             )
                            ],
              ),
             ),
@@ -57,7 +65,7 @@ class _BarSearch extends StatelessWidget {
                        ),
                 ),
          ),
-         onTap: () {}
+         onTap: () => NavigationService().navigateTo('search_producto')
   );
   }
 }
@@ -118,13 +126,8 @@ class __ProductosListState extends State<_ProductosList> {
                                                 itemCount: state.productos.length + 1,
                                                 itemBuilder: (BuildContext context, int index) {
                                                   if(index == state.productos.length ){
-                                               return Center(
-                                                      child: Container(
-                                                             padding : EdgeInsets.all(10),
-                                                             child   : CircularProgressIndicator(),
-                                                             )
-                                                 );
-                                          }
+                                                    return LoadingCardProducto();
+                                                  }
                                                   return  CardProducto(producto: state.productos[index]);
                                                 }
                                                    

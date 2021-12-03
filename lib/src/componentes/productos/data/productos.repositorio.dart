@@ -23,6 +23,16 @@ class ProductosRepositorio {
     }
   }
 
+   Future<ResponseHttp> searchProductos(String texto) async {
+    try {
+      final response = await this._dio.get('/productos/search/$texto');
+      final productos = response.data.map<Producto>((producto)=>Producto.toJson(producto)).toList();
+      return ResponseProductos(productos: productos);
+    } on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  }
+
   Future<ResponseHttp> getCategorias() async {
     try {
       final response = await this._dio.get('/categorias_producto');

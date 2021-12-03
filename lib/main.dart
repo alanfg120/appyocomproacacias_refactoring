@@ -86,7 +86,7 @@ class MyApp extends StatelessWidget {
              create: (context) => UsuarioCubit(usuario: homeCubit!.state.usuario!,repocitorio: UsuarioRepocitorio()),
              ),
              BlocProvider<ProductosBloc>(
-             create: (context) => ProductosBloc(repocitorio: ProductosRepositorio(),prefs: PreferenciasUsuario()),
+             create: (context) => ProductosBloc(repocitorio: ProductosRepositorio(),prefs: PreferenciasUsuario())..add(GetInitialData()),
              ),
            ],
            child: BlocSelector<HomeCubit,HomeState,bool>(

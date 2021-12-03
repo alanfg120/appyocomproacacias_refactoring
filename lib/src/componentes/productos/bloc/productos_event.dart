@@ -8,6 +8,15 @@ abstract class ProductosEvent extends Equatable {
 
 class GetProductosEvent extends ProductosEvent {}
 
+class GetInitialData extends ProductosEvent {}
+
 class GetNewProductosEvent extends ProductosEvent {}
 
 class GetCategoriasProductoEvent extends ProductosEvent {}
+
+class SearchProductoEvent extends ProductosEvent {
+ final String texto;
+  SearchProductoEvent(this.texto);
+  @override
+  List<Object> get props => [texto];
+}

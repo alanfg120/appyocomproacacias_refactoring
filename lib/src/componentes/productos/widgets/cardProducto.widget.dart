@@ -18,7 +18,7 @@ class CardProducto extends StatelessWidget {
                           child   : Row(
                           children: [
                             SizedBox(
-                            width  : 100,
+                            width  : 150,
                             height : 100,
                             child: FlutterLogo()
                             ),
