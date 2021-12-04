@@ -92,7 +92,6 @@ class _Tabs extends StatelessWidget {
              icon: Icons.list_alt_outlined, 
              onTap: (){
                NavigationService().navigateTo('categorias_producto');
-               context.read<ProductosBloc>().add(GetCategoriasProductoEvent());
              }
              ),
            ],

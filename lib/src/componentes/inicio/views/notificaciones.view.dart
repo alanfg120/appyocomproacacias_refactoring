@@ -87,13 +87,12 @@ class NotificationPage extends StatelessWidget {
             image: AssetImage('assets/imagenes/logo.png')
             )
             :
-            FadeInImage(
-            height : 50,
-            width  : 50,
-            fit    : BoxFit.cover,
-            placeholder: AssetImage('assets/imagenes/load_image.gif'), 
-            image: CachedNetworkImageProvider('$url/usuarios/${usuario.imagen!.nombre}')
-            ),
+            CachedNetworkImage(
+            imageUrl    : '$url/usuarios/${usuario.imagen!.nombre}',
+            placeholder : (context, url) =>  Image.asset('assets/imagenes/load_image.gif'),
+            errorWidget : (context, url, error) => Image.asset('assets/imagenes/logo_no_img.png'),
+            fit         : BoxFit.cover,
+           ),
    );
  }
 

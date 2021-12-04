@@ -7,6 +7,7 @@ part 'progress_state.dart';
 class ProgressCubit extends Cubit<ProgressState> {
   final PublicacionesCubit publicacionesCubit;
 
+  
   ProgressCubit(this.publicacionesCubit) : super(ProgressState.initial()){
     publicacionesCubit.stream.listen((state) {
       if(state.progress > 0) 

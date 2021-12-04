@@ -22,7 +22,11 @@ class ProductosBloc extends Bloc<ProductosEvent, ProductosState> {
   ProductosBloc({required this.repocitorio, required this.prefs})
       : super(ProductosState.initial()) {
     on<GetInitialData>((event, emit) async {
-      if (!state.getInitaialData) add(GetProductosEvent());
+      if (!state.getInitaialData){
+        add(GetProductosEvent());
+        add(GetCategoriasProductoEvent());
+      }
+      
     });
 
     on<GetProductosEvent>((event, emit) async {
@@ -107,9 +111,28 @@ class ProductosBloc extends Bloc<ProductosEvent, ProductosState> {
         print(response.getError);
       }
     });
+
+    on<GetProductosByUsuarioEvent>((event, emit) async {
+      if (state.productosOfUsuario.length == 0) {
+        emit(state.copyWith(loadingProdUsuario: true));
+        final response = await repocitorio.getProductoByUsuario(prefs.idUsuario);
+        if(response is ResponseProductos){
+          emit(state.copyWith(
+               productosOfUsuario: response.productos,
+               loadingProdUsuario: false
+          ));
+        }
+        if(response is ErrorResponseHttp){
+          print(response.getError);
+        }
+      }
+    });
+    
+    on<AddProductoEvent>((event, emit) {
+     
+    });
   }
 
- 
   List<Producto> _getOfertas(
       bool news, List<Producto> ofertas, List<Producto>? productos) {
     List<Producto> ofertas;
@@ -121,5 +144,4 @@ class ProductosBloc extends Bloc<ProductosEvent, ProductosState> {
     }
     return ofertas;
   }
-
 }

@@ -12,12 +12,16 @@ class GetInitialData extends ProductosEvent {}
 
 class GetNewProductosEvent extends ProductosEvent {}
 
+class GetCategoriasProductoEvent extends ProductosEvent {}
+
+class GetProductosByUsuarioEvent extends ProductosEvent {}
+
+
+
 class GetOfertasProductosEvent extends ProductosEvent {
   final bool news;
   GetOfertasProductosEvent({this.news = false});
 }
-
-class GetCategoriasProductoEvent extends ProductosEvent {}
 
 class SearchProductoEvent extends ProductosEvent {
  final String texto;
@@ -31,3 +35,11 @@ class GetProductosByCategoriaEvent extends ProductosEvent {
   @override
   List<Object?> get props => [idCategoria];
 }
+class AddProductoEvent extends ProductosEvent {
+  final Producto producto;
+  AddProductoEvent(this.producto);
+  @override
+  List<Object?> get props => [producto];
+}
+
+

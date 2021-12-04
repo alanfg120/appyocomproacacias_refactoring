@@ -1,4 +1,5 @@
 
+import 'package:appyocomproacacias_refactoring/src/componentes/empresas/bloc/empresas_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/formpublicaciones_cubit.dart';
@@ -42,9 +43,9 @@ class FormPublicacionPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     String textoForm = update ? publicacion!.texto : '';
-    final homeState = context.read<HomeCubit>().state;
-    final empresas = homeState.usuario!.empresas;
-    final url = homeState.url;
+    final url = context.read<HomeCubit>().urlImagenes;
+    final empresas = context.read<EmpresasBloc>().state.empresas;
+
      if(update)
     _bloc.getDataPublicacionUpdate(publicacion!,empresas);
 
@@ -109,7 +110,7 @@ class FormPublicacionPage extends StatelessWidget {
                                                                          texto   : textoForm,
                                                                          fecha   : DateTime.now().toIso8601String(),
                                                                          comentarios  : update ? this.publicacion!.comentarios   : [],
-                                                                         usuariosLike : update ? this.publicacion!.usuariosLike : []
+                                                                         usuariosLike : update ? this.publicacion!.usuariosLike  : []
                                                      );
                                                      if(!update)
                                                      await context.read<PublicacionesCubit>().addPublicacion(publicacion,_bloc.state.imagenes);

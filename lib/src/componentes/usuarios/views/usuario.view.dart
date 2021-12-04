@@ -1,4 +1,5 @@
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/imageFile.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/cubit/usuario_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/models/usuario.model.dart';
@@ -46,7 +47,10 @@ class UsuarioOptios extends StatelessWidget {
                                      _ItemOption(
                                       icon: Icons.shopping_bag, 
                                       text: 'Tus Productos', 
-                                      onTap: (){}
+                                      onTap: () {
+                                        NavigationService().navigateTo('productos');
+                                        context.read<ProductosBloc>().add(GetProductosByUsuarioEvent());
+                                      }
                                      ),
                                     
                                ],

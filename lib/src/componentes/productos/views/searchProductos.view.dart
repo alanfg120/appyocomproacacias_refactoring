@@ -29,7 +29,7 @@ class _SearchProductosPageState extends State<SearchProductosPage> {
   }
   @override
   Widget build(BuildContext context) {
-    final url = context.read<HomeCubit>().urlImagenes;
+
     return Scaffold(
             appBar: AppBar(
                     title: TextField(

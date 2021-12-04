@@ -56,6 +56,18 @@ class ProductosRepositorio {
     }
   }
 
+  Future<ResponseHttp> getProductoByUsuario(int idUsuario) async {
+    try {
+      await Future.delayed(Duration(seconds: 5));
+      final response = await this._dio.get('/productos/usuarios/$idUsuario');
+      final productos = response.data
+          .map<Producto>((producto) => Producto.toJson(producto))
+          .toList();
+      return ResponseProductos(productos: productos);
+    } on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  } 
   
   /* Future<ResponseModel> addProducto(
       Producto producto, int idEmpresa, List<ImageFile> imagenes) async {
