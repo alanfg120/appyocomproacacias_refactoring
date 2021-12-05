@@ -37,9 +37,17 @@ class GetProductosByCategoriaEvent extends ProductosEvent {
 }
 class AddProductoEvent extends ProductosEvent {
   final Producto producto;
-  AddProductoEvent(this.producto);
+  final int idEmpresa;
+  final List<ImageFile> imagenes;
+  AddProductoEvent({required this.producto,required this.idEmpresa,required this.imagenes});
   @override
-  List<Object?> get props => [producto];
+  List<Object?> get props => [producto,imagenes,idEmpresa];
 }
 
+class ProgressEvent extends ProductosEvent{
+  final double progress;
+  ProgressEvent(this.progress);
+   @override
+  List<Object?> get props => [progress];
+}
 

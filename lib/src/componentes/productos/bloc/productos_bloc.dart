@@ -2,6 +2,7 @@ import 'package:appyocomproacacias_refactoring/src/componentes/productos/data/pr
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/categoriaProducto.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/producto.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/response.model.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/imageFile.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/response/models/error.model.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/shared.service.dart';
 import 'package:bloc/bloc.dart';
@@ -22,11 +23,10 @@ class ProductosBloc extends Bloc<ProductosEvent, ProductosState> {
   ProductosBloc({required this.repocitorio, required this.prefs})
       : super(ProductosState.initial()) {
     on<GetInitialData>((event, emit) async {
-      if (!state.getInitaialData){
+      if (!state.getInitaialData) {
         add(GetProductosEvent());
         add(GetCategoriasProductoEvent());
       }
-      
     });
 
     on<GetProductosEvent>((event, emit) async {
@@ -115,21 +115,38 @@ class ProductosBloc extends Bloc<ProductosEvent, ProductosState> {
     on<GetProductosByUsuarioEvent>((event, emit) async {
       if (state.productosOfUsuario.length == 0) {
         emit(state.copyWith(loadingProdUsuario: true));
-        final response = await repocitorio.getProductoByUsuario(prefs.idUsuario);
-        if(response is ResponseProductos){
+        final response =
+            await repocitorio.getProductoByUsuario(prefs.idUsuario);
+        if (response is ResponseProductos) {
           emit(state.copyWith(
-               productosOfUsuario: response.productos,
-               loadingProdUsuario: false
-          ));
+              productosOfUsuario: response.productos,
+              loadingProdUsuario: false));
         }
-        if(response is ErrorResponseHttp){
+        if (response is ErrorResponseHttp) {
           print(response.getError);
         }
       }
     });
-    
-    on<AddProductoEvent>((event, emit) {
-     
+
+    on<AddProductoEvent>((event, emit) async {
+      emit(state.copyWith(loadingForm: true));
+      final response = await repocitorio.addProducto(
+          event.producto, event.idEmpresa, event.imagenes,
+          onProgress: (progress) => add(ProgressEvent(progress)));
+      if (response is ResponseProductos) {
+        emit(state.copyWith(
+            productos: List.of(state.productos)..insert(0, response.producto!),
+            productosOfUsuario: List.of(state.productosOfUsuario)
+              ..add(response.producto!),
+            loadingForm: false));
+      }
+      if (response is ErrorResponseHttp) {
+        print(response.getError);
+      }
+    });
+
+    on<ProgressEvent>((event, emit) {
+      emit(state.copyWith(progress: event.progress));
     });
   }
 

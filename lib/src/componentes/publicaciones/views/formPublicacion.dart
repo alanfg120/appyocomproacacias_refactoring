@@ -7,6 +7,7 @@ import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cub
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/imageFile.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/publicacion.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/InputForm.widget.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/widgets/dialogBack.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/dialogImage.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/dialogLoading.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/snack.widged.dart';
@@ -153,7 +154,7 @@ Widget _escogerEmpresa(BuildContext context,List<Empresa> empresas,String url) {
 Future<bool> _onWillpop(context) async {
    final result =  await showDialog(
       context: context,
-      builder: (context) => _DialogBack(),
+      builder: (context) => DialogBack(),
     );
     if(result){
       await _bloc.deleteFiles();
@@ -309,34 +310,3 @@ class _Imagenes extends StatelessWidget {
   }
 }
 
-class _DialogBack extends StatelessWidget {
-  const _DialogBack({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-           title   :  const Text('Esta seguro de salir?'),
-           content : const Text('Perdera todos los cambios'),
-           actions : [
-                     ElevatedButton(
-                     child : const Text('Aceptar'),
-                     style : ElevatedButton.styleFrom(
-                             primary: Theme.of(context).primaryColor,
-                             textStyle: TextStyle(color: Colors.white)
-                     ),
-                     onPressed:  () => Navigator.pop(context,true),
-                     ),
-                     ElevatedButton(
-                     child : const Text('Cancelar'),
-                     style : ElevatedButton.styleFrom(
-                             primary: Theme.of(context).accentColor,
-                             textStyle: TextStyle(color: Colors.white)
-                     ),
-                     onPressed: () => Navigator.pop(context,false),
-                     )
-           ],
-
-    );
-  }
-}
-  

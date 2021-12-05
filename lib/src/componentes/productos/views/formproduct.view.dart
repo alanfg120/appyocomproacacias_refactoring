@@ -7,7 +7,10 @@ import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/producto.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/imageFile.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/InputForm.widget.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/widgets/dialogBack.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/dialogImage.widget.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/widgets/dialogLoading.widget.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/widgets/snack.widged.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/image_piker.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -51,103 +54,137 @@ class FormProducto extends StatelessWidget {
   
     return BlocProvider<FormProductosCubit>(
            create: (context) => _bloc,
-           child: GestureDetector(
-                  child: Scaffold(
-                         appBar: AppBar(
-                              title: Text('${update ? 'Actualizar' : 'Agregar '} Producto'),
-                              elevation: 0,
-                         ),
-                         body: SingleChildScrollView(
-                                   padding: EdgeInsets.all(25),
-                                   child: Form(
-                                          key:   formKey,
-                                          child: Column(
-                                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                                 children: [
-                                                  Text('Agrega hasta 5 imagenes'),
-                                                  SizedBox(height: 30),
-                                                  _Imagenes(bloc:_bloc,url: url),
-                                                  SizedBox(height: 15),
-                                                  _EscojerEmpresa(bloc:_bloc,url:url,empresas: empresas),
-                                                  SizedBox(height: 15),
-                                                  _EscojerCategoria(bloc:_bloc,categorias: categorias),
-                                                  SizedBox(height: 15),
-                                                  InputForm(
-                                                  placeholder       : 'Nombre',
-                                                  foco              : focoNombre,
-                                                  leftIcon          : Icons.text_snippet,
-                                                  requerido         : true,
-                                                  onChanged         : (text) => nombre = text,
-                                                  onEditingComplete : ()=>FocusScope.of(context).requestFocus(focoDescripcion)
-                                                  ),
-                                                  InputForm(
-                                                  placeholder       : 'Descripción',
-                                                  foco              : focoDescripcion,
-                                                  leftIcon          : Icons.description,
-                                                  textarea          : true,
-                                                  requerido         : true,
-                                                  onChanged         : (text) => descripcion = text,
-                                                  onEditingComplete : ()=>FocusScope.of(context).requestFocus(focoPrecio)
-                                                  ),
-                                                  InputForm(
-                                                  placeholder       : 'Precio',
-                                                  foco              : focoPrecio,
-                                                  leftIcon          : Icons.monetization_on_outlined,
-                                                  number            : true,
-                                                  requerido         : true,
-                                                  onChanged         : (text) => precio = text,
-                                                  ),
-                                                  _Oferta(),
-                                                  BlocBuilder<FormProductosCubit, FormProductosState>(
-                                                    bloc: _bloc,
-                                                    builder: (context, state) {
-                                                      return InputForm(
-                                                             placeholder       : 'Detalle de oferta',
-                                                             enabled           : state.oferta,
-                                                             foco              : focoDetalleOferta,
-                                                             leftIcon          : Icons.star_rate_outlined, 
-                                                             onChanged         : (text) => detalle = text,                               
-                                                      );
-                                                    },
-                                                  ),
-                                                  MaterialButton(
-                                                  padding   : const EdgeInsets.all(16),
-                                                  color     : Theme.of(context).primaryColor,
-                                                  textColor : Colors.white,
-                                                  child     : Text('${update ? 'Actualizar' : 'Agregar'}'),
-                                                  minWidth  : double.maxFinite,
-                                                  onPressed: (){
-                                                   if(_bloc.state.empresaSelecionada != -1 
-                                                      &&_bloc.state.empresaSelecionada != -1
-                                                      &&_bloc.state.imagenes.length > 0
-                                                      && formKey.currentState!.validate()){
-                                                      final newProducto = Producto(
-                                                                          id                : update ? producto!.id : null,
-                                                                          nombre            : nombre,
-                                                                          descripcion       : descripcion,
-                                                                          categoria         : _bloc.state.categoria!,
-                                                                          empresa           : _bloc.state.empresa!,
-                                                                          descripcionOferta : detalle,
-                                                                          cantidad          : 0,
-                                                                          imagenes          : _bloc.state.imagenes.map((i) => i.nombre).toList(),
-                                                                          oferta            : _bloc.state.oferta,
-                                                                          precio            : int.parse(precio)
-                                                       );
-                                                    }
-                                                    
-                                                  }
-                                                  )
-                                                 ],
-                                          )
-                                   ),
-                        )
-          ),
-          onTap : ()=>FocusScope.of(context).unfocus(),
-        ),
+           child: BlocListener<ProductosBloc, ProductosState>(
+             listener: (context, state) {
+                if(state.loadingForm)
+                 dialogLoading(context, 'Agregando Producto',true);
+                if(!state.loadingForm){
+                   NavigationService().back();
+                   snacKBar('Producto ${update ? 'Actualizado': 'Creado'}',
+                             context,
+                             onPressed: ()=> NavigationService().back(),
+                             onclose  : ()=> NavigationService().back()
+                   );
+                }
+               
+             },
+             listenWhen:(previusState,state){
+                return previusState.loadingForm != state.loadingForm;
+             },
+             child: WillPopScope(
+                             onWillPop : () async => _onWillpop(context),
+                              child: GestureDetector(
+                               child: Scaffold(
+                                      appBar: AppBar(
+                                           title: Text('${update ? 'Actualizar' : 'Agregar '} Producto'),
+                                           elevation: 0,
+                                      ),
+                                      body: SingleChildScrollView(
+                                                padding: EdgeInsets.all(25),
+                                                child: Form(
+                                                       key:   formKey,
+                                                       child: Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                               Text('Agrega hasta 5 imagenes'),
+                                                               SizedBox(height: 30),
+                                                               _Imagenes(bloc:_bloc,url: url),
+                                                               SizedBox(height: 15),
+                                                               _EscojerEmpresa(bloc:_bloc,url:url,empresas: empresas),
+                                                               SizedBox(height: 15),
+                                                               _EscojerCategoria(bloc:_bloc,categorias: categorias),
+                                                               SizedBox(height: 15),
+                                                               InputForm(
+                                                               placeholder       : 'Nombre',
+                                                               foco              : focoNombre,
+                                                               leftIcon          : Icons.text_snippet,
+                                                               requerido         : true,
+                                                               onChanged         : (text) => nombre = text,
+                                                               onEditingComplete : ()=>FocusScope.of(context).requestFocus(focoDescripcion)
+                                                               ),
+                                                               InputForm(
+                                                               placeholder       : 'Descripción',
+                                                               foco              : focoDescripcion,
+                                                               leftIcon          : Icons.description,
+                                                               textarea          : true,
+                                                               requerido         : true,
+                                                               onChanged         : (text) => descripcion = text,
+                                                               onEditingComplete : ()=>FocusScope.of(context).requestFocus(focoPrecio)
+                                                               ),
+                                                               InputForm(
+                                                               placeholder       : 'Precio',
+                                                               foco              : focoPrecio,
+                                                               leftIcon          : Icons.monetization_on_outlined,
+                                                               number            : true,
+                                                               requerido         : true,
+                                                               onChanged         : (text) => precio = text,
+                                                               ),
+                                                               _Oferta(),
+                                                               BlocBuilder<FormProductosCubit, FormProductosState>(
+                                                                 bloc: _bloc,
+                                                                 builder: (context, state) {
+                                                                   return InputForm(
+                                                                          placeholder       : 'Detalle de oferta',
+                                                                          enabled           : state.oferta,
+                                                                          foco              : focoDetalleOferta,
+                                                                          leftIcon          : Icons.star_rate_outlined, 
+                                                                          onChanged         : (text) => detalle = text,                               
+                                                                   );
+                                                                 },
+                                                               ),
+                                                               MaterialButton(
+                                                               padding   : const EdgeInsets.all(16),
+                                                               color     : Theme.of(context).primaryColor,
+                                                               textColor : Colors.white,
+                                                               child     : Text('${update ? 'Actualizar' : 'Agregar'}'),
+                                                               minWidth  : double.maxFinite,
+                                                               onPressed: (){
+                                                                if(_bloc.state.empresaSelecionada != -1 
+                                                                   &&_bloc.state.categoriaSelecionada != -1
+                                                                   &&_bloc.state.imagenes.length > 0
+                                                                   && formKey.currentState!.validate()){
+                                                                   final newProducto = Producto(
+                                                                                       id                : update ? producto!.id : null,
+                                                                                       nombre            : nombre,
+                                                                                       descripcion       : descripcion,
+                                                                                       categoria         : _bloc.state.categoria!,
+                                                                                       empresa           : _bloc.state.empresa!,
+                                                                                       descripcionOferta : detalle,
+                                                                                       cantidad          : 0,
+                                                                                       imagenes          : _bloc.state.imagenes.map((i) => i.nombre).toList(),
+                                                                                       oferta            : _bloc.state.oferta,
+                                                                                       precio            : int.parse(precio)
+                                                                    );
+                                                                    if(!update)
+                                                                     context.read<ProductosBloc>()
+                                                                             .add(AddProductoEvent(
+                                                                                  producto: newProducto,
+                                                                                  idEmpresa: _bloc.state.empresa!.id!,
+                                                                                  imagenes:  _bloc.state.imagenes
+                                                                     ));
+                                                                 }
+                                                                 else snacKBar('Faltan Datos', context);
+                                                               }
+                                                               )
+                                                              ],
+                                                       )
+                                                ),
+                                     )
+                                ),
+                                onTap : ()=>FocusScope.of(context).unfocus(),
+                              ),
+                      ),
+           ),
     );
   }
 
-
+Future<bool> _onWillpop(context) async {
+   final result =  await showDialog(
+      context: context,
+      builder: (context) => DialogBack(),
+    );
+    return result;
+  }
 
 }
 

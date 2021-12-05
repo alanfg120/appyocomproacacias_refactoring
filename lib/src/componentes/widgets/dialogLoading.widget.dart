@@ -1,4 +1,6 @@
- import 'package:appyocomproacacias_refactoring/src/componentes/progressLoading/cubit/progress_cubit.dart';
+
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/progressLoading/cubit/progress_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/publicaciones_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +18,7 @@ void dialogLoading(BuildContext context,String title,[bool progress = false]) {
              backgroundColor : Colors.transparent,
              content         : progress
                                ? BlocBuilder<ProgressCubit, ProgressState>(
-                                 bloc   : ProgressCubit(context.read<PublicacionesCubit>()),
+                                 bloc   : ProgressCubit(context.read<PublicacionesCubit>(),context.read<ProductosBloc>()),
                                  builder: (context, state) {
                                    return SizedBox(
                                           height : 40,

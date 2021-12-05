@@ -14,8 +14,9 @@ class ProductosState extends Equatable {
              loadingSearch,
              loadingOfertas,
              loadingProdUsuario,
-             loadingDelete;
-
+             loadingDelete,
+             loadingForm;
+  final double progress;
   final int paginaProductos,paginaOfertas;
  
   const ProductosState({
@@ -31,8 +32,10 @@ class ProductosState extends Equatable {
         required this.loadingOfertas,
         required this.loadingProdUsuario,
         required this.loadingDelete,
+        required this.loadingForm,
         required this.paginaProductos,
-        required this.paginaOfertas});
+        required this.paginaOfertas,
+        required this.progress});
   
   factory ProductosState.initial() => 
           ProductosState(
@@ -43,13 +46,15 @@ class ProductosState extends Equatable {
           categorias         : [],
           paginaProductos    : 0,
           paginaOfertas      : 0,
+          progress           : 0.0,
           loadingProductos   : true,
           loadingOfertas     : true,
           getInitaialData    : false,
           loadingCategorias  : false,
           loadingSearch      : false,
           loadingProdUsuario : false,
-          loadingDelete      : false 
+          loadingDelete      : false,
+          loadingForm        : false
           );
 
   ProductosState copyWith(
@@ -60,13 +65,15 @@ class ProductosState extends Equatable {
                    List<CategoriaProducto>? categorias,
                    int? paginaProductos,
                    int? paginaOfertas,
+                   double? progress,
                    bool? getInitaialData,
                    bool? loadingProductos, 
                    bool? loadingCategorias,
                    bool? loadingSearch,
                    bool? loadingOfertas,
                    bool? loadingProdUsuario,
-                   bool? loadingDelete}) 
+                   bool? loadingDelete,
+                   bool? loadingForm}) 
                    => ProductosState(
                       productos          : productos          ?? this.productos,
                       resulProductos     : resulProductos     ?? this.resulProductos,
@@ -75,13 +82,15 @@ class ProductosState extends Equatable {
                       categorias         : categorias         ?? this.categorias,
                       paginaProductos    : paginaProductos    ?? this.paginaProductos,
                       paginaOfertas      : paginaOfertas      ?? this.paginaOfertas,
+                      progress           : progress           ?? this.progress,
                       getInitaialData    : getInitaialData    ?? this.getInitaialData,
                       loadingProductos   : loadingProductos   ?? this.loadingProductos,
                       loadingCategorias  : loadingCategorias  ?? this.loadingCategorias,
                       loadingSearch      : loadingSearch      ?? this.loadingSearch, 
                       loadingOfertas     : loadingOfertas     ?? this.loadingOfertas,  
                       loadingProdUsuario : loadingProdUsuario ?? this.loadingProdUsuario, 
-                      loadingDelete      : loadingDelete      ?? this.loadingDelete  
+                      loadingDelete      : loadingDelete      ?? this.loadingDelete,
+                      loadingForm        : loadingForm        ?? this.loadingForm
                    );
 
   @override
@@ -93,13 +102,15 @@ class ProductosState extends Equatable {
              categorias,
              paginaProductos,
              paginaOfertas,
+             progress,
              getInitaialData,
              loadingProductos,
              loadingCategorias,
              loadingSearch,
              loadingOfertas,
              loadingProdUsuario,
-             loadingDelete];
+             loadingDelete,
+             loadingForm];
 }
 
 

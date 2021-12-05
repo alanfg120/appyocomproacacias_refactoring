@@ -120,7 +120,7 @@ class __ProductosListState extends State<_ProductosList> {
            child: Padding(
                   padding : const EdgeInsets.all(4),
                   child   : BlocBuilder<ProductosBloc, ProductosState>(
-                         builder: (context, state) {
+                            builder: (context, state) {
                               final url = context.read<HomeCubit>().urlImagenes;
                               return RefreshIndicator(
                                      onRefresh: () async => context.read<ProductosBloc>().add(GetNewProductosEvent()),

@@ -2,6 +2,7 @@
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/categoriaProducto.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/producto.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/response.model.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/imageFile.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/response/models/error.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/response/models/reponse.model.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/dio.singleton.dart';
@@ -68,7 +69,25 @@ class ProductosRepositorio {
       return ErrorResponseHttp(error);
     }
   } 
-  
+  Future<ResponseHttp> addProducto(
+      Producto producto, int idEmpresa, List<ImageFile> imagenes,{Function(double)? onProgress}) async {
+    try {
+      FormData data = FormData.fromMap({...producto.toMap(idEmpresa)});
+      imagenes.forEach((imagen) async {
+        data.files.add(MapEntry(
+          imagen.nombre,
+          MultipartFile.fromFileSync(imagen.file!.path, filename: imagen.nombre),
+        ));
+      });
+      final response = await this._dio.post('/productos/add', data: data,onSendProgress: (int received, int total) {
+          final progress = (received / total);
+          onProgress?.call(progress);
+        },);
+      return ResponseProductos(producto: Producto.toJson(response.data));
+    } on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  }
   /* Future<ResponseModel> addProducto(
       Producto producto, int idEmpresa, List<ImageFile> imagenes) async {
     try {

@@ -5,6 +5,7 @@ import 'package:appyocomproacacias_refactoring/src/componentes/response/models/r
 class ResponseProductos extends ResponseHttp {
   final List<Producto>? productos;
   final List<CategoriaProducto>? categorias;
+  final Producto? producto;
 
-  ResponseProductos({this.productos,this.categorias});
+  ResponseProductos({this.productos,this.categorias,this.producto});
 }
