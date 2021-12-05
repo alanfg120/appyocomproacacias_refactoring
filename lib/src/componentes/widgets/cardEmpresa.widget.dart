@@ -14,6 +14,7 @@ class CardEmpresa extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
           child: Card(
+                 elevation: 2,
                  child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                         child: ListTile(

@@ -132,7 +132,10 @@ class __ProductosListState extends State<_ProductosList> {
                                                   if(index == state.productos.length ){
                                                     return LoadingCardProducto();
                                                   }
-                                                  return  CardProducto(producto: state.productos[index],url: url);
+                                                  return  CardProducto(
+                                                          producto: state.productos[index],
+                                                          url: url
+                                                  );
                                                 }
                                                    
                                        

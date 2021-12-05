@@ -9,7 +9,7 @@ import 'package:appyocomproacacias_refactoring/src/componentes/login/views/login
 import 'package:appyocomproacacias_refactoring/src/componentes/login/views/registro.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/views/categorias.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/views/ofertas.view.dart';
-import 'package:appyocomproacacias_refactoring/src/componentes/productos/views/producto.view.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/views/productos.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/views/searchProductos.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/views/help.view.dart';
 import 'package:flutter/material.dart';
