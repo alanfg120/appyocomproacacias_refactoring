@@ -50,4 +50,12 @@ class ProgressEvent extends ProductosEvent{
    @override
   List<Object?> get props => [progress];
 }
+class DeleteProductoEvent extends ProductosEvent{
+  final int idProducto;
+  DeleteProductoEvent(this.idProducto);
+   @override
+  List<Object?> get props => [idProducto];
+}
+
+
 

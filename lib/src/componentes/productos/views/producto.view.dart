@@ -26,8 +26,6 @@ class ProductosPage extends StatelessWidget {
                       return Center(child: CircularProgressIndicator());
                     if(productos.length == 0)
                       return Center(child: Text('No hay productos'));
-                    if(productos.length == 0)
-                      return Center(child: Text('No hay productos'));
                     return ListView.separated(
                            separatorBuilder: (_,i) => SizedBox(height: 15),
                            padding: const EdgeInsets.all(15),
@@ -89,15 +87,15 @@ class _EmpresaList extends StatelessWidget {
               icon      : Icon(Icons.delete),
               iconSize  : 30,
               color     : Colors.red,
-              onPressed : () => showDialog(context: context, builder: (context) => _DialogoDelete(idEmpresa: producto.id!)), 
+              onPressed : () => showDialog(context: context, builder: (context) => _DialogoDelete(idProducto : producto.id!)), 
               )
           ],
     );
 }
 }
 class _DialogoDelete extends StatelessWidget {
-  final int idEmpresa;
-  const _DialogoDelete({Key? key,required this.idEmpresa}) : super(key: key);
+  final int idProducto;
+  const _DialogoDelete({Key? key,required this.idProducto}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +122,7 @@ class _DialogoDelete extends StatelessWidget {
              style : ElevatedButton.styleFrom(
                      primary: Theme.of(context).primaryColor
              ),
-             onPressed: (){}// => context.read<ProductosBloc>().add(DeleeteEmpresaEvent(idEmpresa: idEmpresa)),
+             onPressed: ()=> context.read<ProductosBloc>().add(DeleteProductoEvent(idProducto)),
              ),
              ElevatedButton(
              child : Text('Cancelar'),

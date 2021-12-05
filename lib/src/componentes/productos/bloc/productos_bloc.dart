@@ -145,11 +145,34 @@ class ProductosBloc extends Bloc<ProductosEvent, ProductosState> {
       }
     });
 
+    on<DeleteProductoEvent>((event, emit) async {
+      emit(state.copyWith(loadingDelete: true));
+      final response = await repocitorio.deleteProducto(event.idProducto);
+      if (response is ResponseProductos) {
+        final index = state.productos
+            .indexWhere((producto) => producto.id == event.idProducto);
+        final indexUsuario = state.productosOfUsuario
+            .indexWhere((producto) => producto.id == event.idProducto);
+        if (index == -1) {
+           emit(state.copyWith(
+             productosOfUsuario: List.of(state.productosOfUsuario)..removeAt(indexUsuario),
+             loadingDelete: false
+           ));
+        }
+        else {
+          emit(state.copyWith(
+             productosOfUsuario: List.of(state.productosOfUsuario)..removeAt(indexUsuario),
+             productos: List.of(state.productos)..removeAt(index),
+             loadingDelete: false
+           ));
+        }
+      }
+    });
+
     on<ProgressEvent>((event, emit) {
       emit(state.copyWith(progress: event.progress));
     });
   }
-
   List<Producto> _getOfertas(
       bool news, List<Producto> ofertas, List<Producto>? productos) {
     List<Producto> ofertas;

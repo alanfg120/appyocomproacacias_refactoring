@@ -14,7 +14,7 @@ class ProductosRepositorio {
 
   final _dio = DioHttp().dio;
 
-   Future<ResponseHttp> getAllProductos(int page,{bool oferta = false}) async {
+  Future<ResponseHttp> getAllProductos(int page,{bool oferta = false}) async {
     try {
       final response = await this._dio.get('/productos',queryParameters: {'page': page,'oferta' : oferta});
       final productos = response.data.map<Producto>((producto)=>Producto.toJson(producto)).toList();
@@ -24,7 +24,7 @@ class ProductosRepositorio {
     }
   }
 
-   Future<ResponseHttp> searchProductos(String texto) async {
+  Future<ResponseHttp> searchProductos(String texto) async {
     try {
       final response = await this._dio.get('/productos/search/$texto');
       final productos = response.data.map<Producto>((producto)=>Producto.toJson(producto)).toList();
@@ -47,7 +47,7 @@ class ProductosRepositorio {
     }
   }
 
-   Future<ResponseHttp> getAllProductosByCategoria(int idCategoria) async {
+  Future<ResponseHttp> getAllProductosByCategoria(int idCategoria) async {
     try {
       final response = await this._dio.get('/productos/categoria/$idCategoria');
       final productos = response.data.map<Producto>((producto)=>Producto.toJson(producto)).toList();
@@ -59,7 +59,6 @@ class ProductosRepositorio {
 
   Future<ResponseHttp> getProductoByUsuario(int idUsuario) async {
     try {
-      await Future.delayed(Duration(seconds: 5));
       final response = await this._dio.get('/productos/usuarios/$idUsuario');
       final productos = response.data
           .map<Producto>((producto) => Producto.toJson(producto))
@@ -69,6 +68,7 @@ class ProductosRepositorio {
       return ErrorResponseHttp(error);
     }
   } 
+
   Future<ResponseHttp> addProducto(
       Producto producto, int idEmpresa, List<ImageFile> imagenes,{Function(double)? onProgress}) async {
     try {
@@ -88,6 +88,17 @@ class ProductosRepositorio {
       return ErrorResponseHttp(error);
     }
   }
+  
+  Future<ResponseHttp> deleteProducto(int idProducto) async {
+    try {
+      final response = await this._dio.delete('/productos/delete/$idProducto');
+      return ResponseProductos(delete: response.data);
+    } on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  }
+  
+  
   /* Future<ResponseModel> addProducto(
       Producto producto, int idEmpresa, List<ImageFile> imagenes) async {
     try {
