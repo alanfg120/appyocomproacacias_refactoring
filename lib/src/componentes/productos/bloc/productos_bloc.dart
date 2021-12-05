@@ -1,3 +1,4 @@
+import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/data/productos.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/categoriaProducto.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/producto.model.dart';
@@ -6,6 +7,7 @@ import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/mod
 import 'package:appyocomproacacias_refactoring/src/componentes/response/models/error.model.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/shared.service.dart';
 import 'package:bloc/bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 part 'productos_event.dart';
@@ -154,25 +156,63 @@ class ProductosBloc extends Bloc<ProductosEvent, ProductosState> {
         final indexUsuario = state.productosOfUsuario
             .indexWhere((producto) => producto.id == event.idProducto);
         if (index == -1) {
-           emit(state.copyWith(
-             productosOfUsuario: List.of(state.productosOfUsuario)..removeAt(indexUsuario),
-             loadingDelete: false
-           ));
-        }
-        else {
           emit(state.copyWith(
-             productosOfUsuario: List.of(state.productosOfUsuario)..removeAt(indexUsuario),
-             productos: List.of(state.productos)..removeAt(index),
-             loadingDelete: false
-           ));
+              productosOfUsuario: List.of(state.productosOfUsuario)
+                ..removeAt(indexUsuario),
+              loadingDelete: false));
+        } else {
+          emit(state.copyWith(
+              productosOfUsuario: List.of(state.productosOfUsuario)
+                ..removeAt(indexUsuario),
+              productos: List.of(state.productos)..removeAt(index),
+              loadingDelete: false));
         }
       }
     });
 
+    on<UpdateProductoEvent>((event, emit) async {
+      emit(state.copyWith(loadingForm: true));
+      final response = await repocitorio.updateProducto(
+          event.producto, event.producto.empresa.id!, event.imagenes,
+          onProgress: (progress) => add(ProgressEvent(progress)));
+      if (response is ResponseProductos) {
+        if (response.update!) {
+           for (var i = 0; i < event.producto.imagenes.length; i++) {
+          await CachedNetworkImage.evictFromCache(
+              '${event.url}/galeria/${event.producto.imagenes[i]}');
+        }
+          final index = state.productos
+              .indexWhere((producto) => producto.id == event.producto.id);
+          final indexUsuario = state.productosOfUsuario
+              .indexWhere((producto) => producto.id == event.producto.id);
+          if (index == -1) {
+            emit(state.copyWith(
+                productosOfUsuario: List.of(state.productosOfUsuario)
+                  ..removeAt(indexUsuario)
+                  ..insert(indexUsuario, event.producto),
+                loadingForm: false));
+          } else {
+            emit(state.copyWith(
+                productosOfUsuario: List.of(state.productosOfUsuario)
+                  ..removeAt(indexUsuario)
+                  ..insert(indexUsuario, event.producto),
+                productos: List.of(state.productos)
+                  ..removeAt(index)
+                  ..insert(index, event.producto),
+                loadingForm: false));
+          }
+        }
+      }
+      if (response is ErrorResponseHttp) {
+        print(response.getError);
+      }
+    });
+    
     on<ProgressEvent>((event, emit) {
       emit(state.copyWith(progress: event.progress));
     });
   }
+
   List<Producto> _getOfertas(
       bool news, List<Producto> ofertas, List<Producto>? productos) {
     List<Producto> ofertas;

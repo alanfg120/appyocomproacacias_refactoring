@@ -45,6 +45,8 @@ class FormProducto extends StatelessWidget {
     final url = context.read<HomeCubit>().urlImagenes;
     final categorias = context.read<ProductosBloc>().state.categorias;
     final empresas = context.read<EmpresasBloc>().state.empresas;
+    if(update)
+     _bloc.getDataUpdate(producto!, empresas, categorias);
 
     String nombre       = update ? producto!.nombre            : '';
     String descripcion  = update ? producto!.descripcion       : '';
@@ -100,6 +102,7 @@ class FormProducto extends StatelessWidget {
                                                                leftIcon          : Icons.text_snippet,
                                                                requerido         : true,
                                                                onChanged         : (text) => nombre = text,
+                                                               initialValue      : nombre,
                                                                onEditingComplete : ()=>FocusScope.of(context).requestFocus(focoDescripcion)
                                                                ),
                                                                InputForm(
@@ -108,6 +111,7 @@ class FormProducto extends StatelessWidget {
                                                                leftIcon          : Icons.description,
                                                                textarea          : true,
                                                                requerido         : true,
+                                                               initialValue      : descripcion,
                                                                onChanged         : (text) => descripcion = text,
                                                                onEditingComplete : ()=>FocusScope.of(context).requestFocus(focoPrecio)
                                                                ),
@@ -117,6 +121,7 @@ class FormProducto extends StatelessWidget {
                                                                leftIcon          : Icons.monetization_on_outlined,
                                                                number            : true,
                                                                requerido         : true,
+                                                               initialValue      : precio,
                                                                onChanged         : (text) => precio = text,
                                                                ),
                                                                _Oferta(),
@@ -127,7 +132,8 @@ class FormProducto extends StatelessWidget {
                                                                           placeholder       : 'Detalle de oferta',
                                                                           enabled           : state.oferta,
                                                                           foco              : focoDetalleOferta,
-                                                                          leftIcon          : Icons.star_rate_outlined, 
+                                                                          leftIcon          : Icons.star_rate_outlined,
+                                                                          initialValue      : detalle, 
                                                                           onChanged         : (text) => detalle = text,                               
                                                                    );
                                                                  },
@@ -161,6 +167,13 @@ class FormProducto extends StatelessWidget {
                                                                                   producto: newProducto,
                                                                                   idEmpresa: _bloc.state.empresa!.id!,
                                                                                   imagenes:  _bloc.state.imagenes
+                                                                     ));
+                                                                    if(update)
+                                                                     context.read<ProductosBloc>()
+                                                                             .add(UpdateProductoEvent(
+                                                                                  producto: newProducto,
+                                                                                  imagenes:  _bloc.state.imagenes,
+                                                                                  url: url
                                                                      ));
                                                                  }
                                                                  else snacKBar('Faltan Datos', context);

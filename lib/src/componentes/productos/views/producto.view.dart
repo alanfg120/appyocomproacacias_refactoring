@@ -76,12 +76,12 @@ class _EmpresaList extends StatelessWidget {
               icon      : Icon(Icons.edit),
               iconSize  : 30,
               color     : Colors.green,
-              onPressed : () {} /* => NavigationService().navigateToRoute(
-                 MaterialPageRoute(builder: (context) =>FormEmpresaPage(
+              onPressed : () => NavigationService().navigateToRoute(
+                 MaterialPageRoute(builder: (context) =>FormProducto(
                    update:  true,
                    producto: producto,
                  ))
-              )  */
+              ) 
               ),
               IconButton(
               icon      : Icon(Icons.delete),

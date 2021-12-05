@@ -1,4 +1,3 @@
-
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/categoriaProducto.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/producto.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/response.model.dart';
@@ -8,16 +7,17 @@ import 'package:appyocomproacacias_refactoring/src/componentes/response/models/r
 import 'package:appyocomproacacias_refactoring/src/recursos/dio.singleton.dart';
 import 'package:dio/dio.dart';
 
-
-
 class ProductosRepositorio {
-
   final _dio = DioHttp().dio;
 
-  Future<ResponseHttp> getAllProductos(int page,{bool oferta = false}) async {
+  Future<ResponseHttp> getAllProductos(int page, {bool oferta = false}) async {
     try {
-      final response = await this._dio.get('/productos',queryParameters: {'page': page,'oferta' : oferta});
-      final productos = response.data.map<Producto>((producto)=>Producto.toJson(producto)).toList();
+      final response = await this
+          ._dio
+          .get('/productos', queryParameters: {'page': page, 'oferta': oferta});
+      final productos = response.data
+          .map<Producto>((producto) => Producto.toJson(producto))
+          .toList();
       return ResponseProductos(productos: productos);
     } on DioError catch (error) {
       return ErrorResponseHttp(error);
@@ -27,7 +27,9 @@ class ProductosRepositorio {
   Future<ResponseHttp> searchProductos(String texto) async {
     try {
       final response = await this._dio.get('/productos/search/$texto');
-      final productos = response.data.map<Producto>((producto)=>Producto.toJson(producto)).toList();
+      final productos = response.data
+          .map<Producto>((producto) => Producto.toJson(producto))
+          .toList();
       return ResponseProductos(productos: productos);
     } on DioError catch (error) {
       return ErrorResponseHttp(error);
@@ -50,7 +52,9 @@ class ProductosRepositorio {
   Future<ResponseHttp> getAllProductosByCategoria(int idCategoria) async {
     try {
       final response = await this._dio.get('/productos/categoria/$idCategoria');
-      final productos = response.data.map<Producto>((producto)=>Producto.toJson(producto)).toList();
+      final productos = response.data
+          .map<Producto>((producto) => Producto.toJson(producto))
+          .toList();
       return ResponseProductos(productos: productos);
     } on DioError catch (error) {
       return ErrorResponseHttp(error);
@@ -67,28 +71,34 @@ class ProductosRepositorio {
     } on DioError catch (error) {
       return ErrorResponseHttp(error);
     }
-  } 
+  }
 
   Future<ResponseHttp> addProducto(
-      Producto producto, int idEmpresa, List<ImageFile> imagenes,{Function(double)? onProgress}) async {
+      Producto producto, int idEmpresa, List<ImageFile> imagenes,
+      {Function(double)? onProgress}) async {
     try {
       FormData data = FormData.fromMap({...producto.toMap(idEmpresa)});
       imagenes.forEach((imagen) async {
         data.files.add(MapEntry(
           imagen.nombre,
-          MultipartFile.fromFileSync(imagen.file!.path, filename: imagen.nombre),
+          MultipartFile.fromFileSync(imagen.file!.path,
+              filename: imagen.nombre),
         ));
       });
-      final response = await this._dio.post('/productos/add', data: data,onSendProgress: (int received, int total) {
+      final response = await this._dio.post(
+        '/productos/add',
+        data: data,
+        onSendProgress: (int received, int total) {
           final progress = (received / total);
           onProgress?.call(progress);
-        },);
+        },
+      );
       return ResponseProductos(producto: Producto.toJson(response.data));
     } on DioError catch (error) {
       return ErrorResponseHttp(error);
     }
   }
-  
+
   Future<ResponseHttp> deleteProducto(int idProducto) async {
     try {
       final response = await this._dio.delete('/productos/delete/$idProducto');
@@ -97,8 +107,35 @@ class ProductosRepositorio {
       return ErrorResponseHttp(error);
     }
   }
-  
-  
+
+  Future<ResponseHttp> updateProducto(
+      Producto producto, int idEmpresa, List<ImageFile> imagenes,
+      {Function(double)? onProgress}) async {
+    try {
+      FormData data =
+          FormData.fromMap({...producto.toMap(idEmpresa, producto.id)});
+      imagenes.forEach((imagen) async {
+        if (imagen.isaFile)
+          data.files.add(MapEntry(
+            imagen.nombre,
+            MultipartFile.fromFileSync(imagen.file!.path,
+                filename: imagen.nombre),
+          ));
+      });
+      final response = await this._dio.put(
+        '/productos/update',
+        data: data,
+        onSendProgress: (int received, int total) {
+          final progress = (received / total);
+          onProgress?.call(progress);
+        },
+      );
+      return ResponseProductos(update: response.data);
+    } on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  }
+
   /* Future<ResponseModel> addProducto(
       Producto producto, int idEmpresa, List<ImageFile> imagenes) async {
     try {
