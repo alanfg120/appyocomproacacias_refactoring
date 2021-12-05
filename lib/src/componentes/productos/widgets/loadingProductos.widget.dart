@@ -67,7 +67,7 @@ class LoadingCardProducto extends StatelessWidget {
                                SizedBox(height: 10),
                                ShimmerLoading(
                                  child: Container(
-                                 width: 220,
+                                 width: 180,
                                  height: 10,
                                  color: Colors.grey
                                  ),
@@ -75,7 +75,7 @@ class LoadingCardProducto extends StatelessWidget {
                                SizedBox(height: 10),
                                ShimmerLoading(
                                  child: Container(
-                                 width: 220,
+                                 width: 180,
                                  height: 10,
                                  color: Colors.grey
                                  ),
@@ -83,7 +83,7 @@ class LoadingCardProducto extends StatelessWidget {
                                 SizedBox(height: 10),
                                ShimmerLoading(
                                  child: Container(
-                                 width: 220,
+                                 width: 180,
                                  height: 10,
                                  color: Colors.grey
                                  ),

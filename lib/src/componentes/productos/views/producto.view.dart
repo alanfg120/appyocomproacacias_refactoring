@@ -114,8 +114,8 @@ class ProductoDetallePage extends StatelessWidget {
                                  children: [
                                    Text('${producto.precioFormat}',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white)),
                                    SizedBox(
-                                   height : 50,
-                                   width  : 150,
+                                   height : 40,
+                                   width  : 130,
                                    child  : OutlinedButton.icon(
                                             label  : Text('Pedir'),
                                             icon   : Icon(Icons.add),
@@ -123,7 +123,7 @@ class ProductoDetallePage extends StatelessWidget {
                                                      backgroundColor : Colors.white,
                                                      primary         : Theme.of(context).primaryColor,
                                                      shape           : RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                                                     textStyle       : TextStyle(fontSize: 25)
+                                                     textStyle       : TextStyle(fontSize: 20)
                                             ),
                                             onPressed: (){},
                                    ),
@@ -174,8 +174,11 @@ class _Imagenes extends StatelessWidget {
                        ),
                        Positioned(
                        top   : 40,
-                       left  : 10,
+                       left  : 11,
                        child : Container(
+                               height: 36,
+                               width: 36,
+                               alignment: Alignment.center,
                                decoration: BoxDecoration(
                                            color        : Colors.white,
                                            borderRadius : BorderRadius.circular(100)               

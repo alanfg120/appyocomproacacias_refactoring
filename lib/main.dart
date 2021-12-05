@@ -37,7 +37,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
  main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Bloc.observer = MyBlocObserver();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   Intl.defaultLocale = 'es_ES';
@@ -45,13 +44,17 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final prefs = PreferenciasUsuario();
   await prefs.initPrefs();
   //prefs.eraseall();
-  DioHttp().initDio('http://localhost:8000',prefs.token);
+  DioHttp().initDio('http://192.168.1.5:8000',prefs.token);
   final homeCubit = HomeCubit(
                     repositorio  : HomeRepocitorio(),
                     preferencias : PreferenciasUsuario(),
-                    urlImagenes  : 'http://localhost:8000/imagenes'
+                    urlImagenes  : 'http://192.168.1.5:8000/imagenes'
   );
-        homeCubit.stream.firstWhere((state) => state.loading == false).then((value) =>runApp(MyApp(homeCubit: homeCubit)));
+ homeCubit.stream.firstWhere((state) => state.loading == false).then((value){
+     BlocOverrides.runZoned(() {
+         runApp(MyApp(homeCubit: homeCubit));
+     },blocObserver: MyBlocObserver());
+ });
   await homeCubit.validateInternet();
 }
 

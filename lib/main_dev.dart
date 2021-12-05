@@ -11,7 +11,6 @@ import 'package:appyocomproacacias_refactoring/src/componentes/login/cubit/login
 import 'package:appyocomproacacias_refactoring/src/componentes/login/data/login.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/publicaciones_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/data/publicaciones.repositorio.dart';
-import 'package:appyocomproacacias_refactoring/src/recursos/bloc.observer.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/dio.singleton.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/routes.dart';
@@ -33,7 +32,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
  main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Bloc.observer = MyBlocObserver();
+  //Bloc.observer = MyBlocObserver();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   Intl.defaultLocale = 'es_ES';
@@ -60,19 +59,19 @@ class MyApp extends StatelessWidget {
   
     return MultiBlocProvider(
            providers: [
-             BlocProvider<LoginCubit>(
+             BlocProvider(
              create: (context) => LoginCubit(repositorio: LoginRepositorio(),prefs: PreferenciasUsuario())
              ),
-             BlocProvider<InicioCubit>(
+             BlocProvider(
              create: (context) => InicioCubit(repocitorio: InicioRepositorio(),prefs:PreferenciasUsuario()),
              ),
-             BlocProvider<PublicacionesCubit>(
+             BlocProvider(
              create: (context) => PublicacionesCubit(repositorio: PublicacionesRepositorio(),prefs:PreferenciasUsuario()),
              ),
-             BlocProvider<EmpresasBloc>(
+             BlocProvider(
              create: (context) => EmpresasBloc(repositorio: EmpresaRepositorio(),prefs:PreferenciasUsuario()),
              ),
-             BlocProvider<CategoriasBloc>(
+             BlocProvider(
              create: (context) => CategoriasBloc(CategoriaRepositorio()),
              ),
              BlocProvider.value(

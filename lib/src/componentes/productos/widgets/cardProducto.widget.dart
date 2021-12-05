@@ -21,7 +21,7 @@ class CardProducto extends StatelessWidget {
                            elevation: 1,
                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                            child: Padding(
-                                  padding : const EdgeInsets.symmetric(vertical: 20),
+                                  padding : const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
                                   child   : Row(
                                   children: [
                                     ClipRRect(
@@ -29,12 +29,12 @@ class CardProducto extends StatelessWidget {
                                     child  : producto.imagenes.length == 0
                                              ? Image.asset(
                                                'assets/imagenes/no_product.png',
-                                               width : 150,
-                                               height : 150,
+                                               width : 130,
+                                               height : 130,
                                              )
                                              : CachedNetworkImage(
-                                             width  : 150,
-                                             height : 150,
+                                             width  : 130,
+                                             height : 130,
                                              imageUrl    : '$url/galeria/${producto.imagenes[0]}',
                                              placeholder : (context, url) =>  Image.asset('assets/imagenes/load_image.gif'),
                                              errorWidget : (context, url, error) => Icon(Icons.error),
@@ -47,7 +47,7 @@ class CardProducto extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                        SizedBox(
-                                       width: 220,
+                                       width: 165,
                                        child: Text(
                                               producto.nombre,
                                               maxLines : 2,
@@ -55,8 +55,9 @@ class CardProducto extends StatelessWidget {
                                               softWrap : false,
                                               style    : TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0)),
                                        ),
+                                       
                                        SizedBox(
-                                       width: 220,
+                                       width: 165,
                                        child: Text(
                                               producto.descripcion,
                                               maxLines : 2,
@@ -65,13 +66,14 @@ class CardProducto extends StatelessWidget {
                                               style    : TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontSize: 15.0),
                                        ),
                                        ),
-                                       Text(producto.precioFormat,style: TextStyle(fontSize: 28)),
                                        if(producto.oferta)
                                        RawChip(
                                        backgroundColor: Colors.transparent,
                                        label: Text('Oferta'),
                                        avatar: Icon(Icons.star_outlined,color: Colors.yellow),
                                        ),
+                                       Text(producto.precioFormat,style: TextStyle(fontSize: 28)),
+                                       
                                        if(!producto.oferta)
                                        SizedBox(height: 35)
                                      ],

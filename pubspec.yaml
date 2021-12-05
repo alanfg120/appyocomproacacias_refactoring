@@ -36,19 +36,19 @@ dependencies:
   uuid: ^3.0.4
   path_provider: ^2.0.2
   percent_indicator: ^3.4.0
-  firebase_core: ^1.5.0
-  firebase_auth: ^3.0.2
+  firebase_core: "^1.10.2"
+  firebase_auth: "^3.3.0"
   google_sign_in: ^5.0.7
   flutter_facebook_auth: ^3.5.0
   badges: ^2.0.1
-  firebase_messaging: "^10.0.4"
+  firebase_messaging: "^11.2.0"
   sign_in_with_apple: ^3.0.0
   crypto: ^3.0.1
   bottom_navy_bar: ^6.0.0
   flutter_staggered_grid_view: ^0.4.0
   card_swiper: ^1.0.4
-  bloc: ^7.2.1
-  flutter_bloc: ^7.3.3
+  bloc: ^8.0.0
+  flutter_bloc: ^8.0.0
   youtube_api: ^1.0.4
   equatable: ^2.0.3  
   shared_preferences: ^2.0.6
@@ -62,7 +62,7 @@ dev_dependencies:
   test:
   flutter_test:
     sdk: flutter
-  bloc_test: ^8.3.0
+  bloc_test: ^9.0.0
   mockito: 
 
 # For information on the generic Dart part of this file, see the
