@@ -38,8 +38,7 @@ class FormPublicacionPage extends StatelessWidget {
 
 
   final _bloc = FormPublicacionesCubit();
-
- 
+  final FocusNode blankNode = FocusNode();
   @override
   Widget build(BuildContext context) {
 
@@ -47,8 +46,7 @@ class FormPublicacionPage extends StatelessWidget {
     final url = context.read<HomeCubit>().urlImagenes;
     final empresas = context.read<EmpresasBloc>().state.empresas;
 
-     if(update)
-    _bloc.getDataPublicacionUpdate(publicacion!,empresas);
+  
 
     return BlocListener<PublicacionesCubit, PublicacionesState>(
            listener: (context, state) {
@@ -125,17 +123,18 @@ class FormPublicacionPage extends StatelessWidget {
                  ),
                      
                      
-              onTap: ()=>FocusScope.of(context).unfocus()
+              onTap: ()=>FocusScope.of(context).requestFocus(blankNode)
              ),
         ),
     );
 }
 
 Widget _escogerEmpresa(BuildContext context,List<Empresa> empresas,String url) {
+  print('hola');
   return ListTile(
          leading : Icon(Icons.business),
          title   : BlocBuilder<FormPublicacionesCubit, FormPublicacionesState>(
-                   bloc: _bloc,
+                   bloc: _bloc..getDataPublicacionUpdate(publicacion!, empresas),
                    builder: (context, state) {
                      if(state.selecionada == -1)
                        return Text('Selecione Empresa');
@@ -146,7 +145,13 @@ Widget _escogerEmpresa(BuildContext context,List<Empresa> empresas,String url) {
                    ? null 
                    : () => showDialog(
                            context: context, 
-                           builder: (context) => _Empresas(empresas: empresas,url: url,bloc:_bloc)
+                           builder: (context) => _Empresas(
+                                                 empresas: empresas,
+                                                 url: url,
+                                                 bloc:_bloc,
+                                                 update: update,
+                                                 publicacion: publicacion!,
+                           )
                    )
   );
 }
@@ -170,10 +175,20 @@ class _Empresas extends StatelessWidget {
   final List<Empresa> empresas;
   final String url;
   final FormPublicacionesCubit bloc;
-  _Empresas({Key? key,required this.empresas,required this.url,required this.bloc}) : super(key: key);
+  final bool update;
+  final Publicacion publicacion;
+
+  _Empresas({
+     Key? key,
+     required this.empresas,
+     required this.url,
+     required this.bloc,
+     required this.update,
+     required this.publicacion}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
     return AlertDialog(
            contentPadding: EdgeInsets.symmetric(vertical: 20,horizontal: 8),
            title   : Text('Escoja la Empresa'),

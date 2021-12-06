@@ -36,12 +36,12 @@ class FormProducto extends StatelessWidget {
  final focoDescripcion        = FocusNode();
  final focoPrecio             = FocusNode();
  final focoDetalleOferta      = FocusNode();
-
+ FocusNode blankNode = FocusNode();
 
 
   @override
   Widget build(BuildContext context) {
-
+    print('hola');
     final url = context.read<HomeCubit>().urlImagenes;
     final categorias = context.read<ProductosBloc>().state.categorias;
     final empresas = context.read<EmpresasBloc>().state.empresas;
@@ -184,7 +184,7 @@ class FormProducto extends StatelessWidget {
                                                 ),
                                      )
                                 ),
-                                onTap : ()=>FocusScope.of(context).unfocus(),
+                                onTap : ()=>FocusScope.of(context).requestFocus(blankNode),
                               ),
                       ),
            ),
@@ -211,13 +211,14 @@ class _Imagenes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FormProductosCubit,FormProductosState>(
-           builder: (context,state){
+    return BlocSelector<FormProductosCubit,FormProductosState,List<ImageFile>>(
+           selector: (state) => state.imagenes,
+           builder: (context,imagenes){
               return Wrap(
                      spacing    : 2,
                      runSpacing : 2,
                      children   : [
-                            if(state.imagenes.length < 5)
+                            if(imagenes.length < 5)
                             GestureDetector( 
                             child: Container(
                                    height : 100,
@@ -241,7 +242,7 @@ class _Imagenes extends StatelessWidget {
                                         )
                             )
                             ),
-                            ...state.imagenes.asMap()
+                            ...imagenes.asMap()
                                              .entries
                                              .map((imagen) => GestureDetector(
                                                               child: imagen.value.isaFile

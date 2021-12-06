@@ -40,7 +40,7 @@ class ProductosPage extends StatelessWidget {
                                    icon            : Icon(Icons.add,color: Colors.white),
                                    backgroundColor : Theme.of(context).primaryColor,
                                    label           : Text('Crear',style: TextStyle(color: Colors.white)),
-                                   tooltip         : 'Crea una Empresa',
+                                   tooltip         : 'Crea un producto',
                                    onPressed       : () => NavigationService().navigateToRoute(
                                                              MaterialPageRoute(builder: (context) => FormProducto())
                                                      )

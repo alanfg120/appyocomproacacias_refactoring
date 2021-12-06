@@ -162,7 +162,7 @@ class  _SearchBar extends StatelessWidget {
                        child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Buscar Comercios en $titulo'),
+                                Text('Buscar Comercios'),
                                 Icon(Icons.search,color: Theme.of(context).primaryColor),
                               ]
                        ),

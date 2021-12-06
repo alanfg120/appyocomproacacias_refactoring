@@ -487,6 +487,7 @@ class _DialogCalificar extends StatelessWidget {
       String texto = '';
 
     return  AlertDialog(
+            contentPadding: EdgeInsets.all(15),
             title   : const Text('Calificar empresa'),
             content : BlocConsumer<PerfilEmpresaCubit,PerfilEmpresaState>(
                       listener: (context,state){

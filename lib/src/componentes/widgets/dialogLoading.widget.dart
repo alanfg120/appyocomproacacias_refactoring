@@ -24,7 +24,7 @@ void dialogLoading(BuildContext context,String title,[bool progress = false]) {
                                           height : 40,
                                           child  : Center(
                                                    child: LinearPercentIndicator(
-                                                          width           : 240.0,
+                                                          width           : 220.0,
                                                           lineHeight      : 14.0,
                                                           percent         : state.progress,
                                                           backgroundColor : Colors.white,

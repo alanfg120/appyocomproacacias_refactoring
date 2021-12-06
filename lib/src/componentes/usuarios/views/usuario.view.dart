@@ -1,3 +1,4 @@
+
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/models/imageFile.model.dart';
@@ -187,12 +188,13 @@ class _Perfil extends StatelessWidget {
              image: FileImage(imagen.file!),
       );
     if(imagen.nombre.isNotEmpty)
-      return FadeInImage(
+      return CachedNetworkImage(
              height : 100,
              width  : 100,
              fit    : BoxFit.cover,
-             placeholder: AssetImage('assets/imagenes/load_image.gif'), 
-             image: CachedNetworkImageProvider('$url/usuarios/${imagen.nombre}')
+             placeholder: (context,url) => Image.asset('assets/imagenes/load_image.gif'), 
+             errorWidget: (context,url,error) => Image.asset('assets/imagenes/logo_no_img.png'),
+             imageUrl: '$url/usuarios/${imagen.nombre}'
        );
     if(imagen.nombre.isEmpty)
       return FadeInImage(

@@ -18,6 +18,7 @@ class _CalificarWidgetState extends State<CalificarWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+           
            child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(5, (start)=>
