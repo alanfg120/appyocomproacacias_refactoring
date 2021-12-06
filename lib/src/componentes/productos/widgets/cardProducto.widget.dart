@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 class CardProducto extends StatelessWidget {
   final String url;
   final Producto producto;
-  
-  const CardProducto({Key? key,required this.producto,required this.url}) : super(key: key);
+  final bool cantidad;
+  const CardProducto({Key? key,required this.producto,required this.url,this.cantidad = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,50 +42,58 @@ class CardProducto extends StatelessWidget {
                                     )
                                     ),
                                     SizedBox(width: 10),
-                                    Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                       SizedBox(
-                                       width: 165,
-                                       child: Text(
-                                              producto.nombre,
-                                              maxLines : 2,
-                                              overflow : TextOverflow.ellipsis,
-                                              softWrap : false,
-                                              style    : TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0)),
-                                       ),
-                                       
-                                       SizedBox(
-                                       width: 165,
-                                       child: Text(
-                                              producto.descripcion,
-                                              maxLines : 2,
-                                              overflow : TextOverflow.ellipsis,
-                                              softWrap : false,
-                                              style    : TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontSize: 15.0),
-                                       ),
-                                       ),
-                                       if(producto.oferta)
-                                       RawChip(
-                                       backgroundColor: Colors.transparent,
-                                       label: Text('Oferta'),
-                                       avatar: Icon(Icons.star_outlined,color: Colors.yellow),
-                                       ),
-                                       Text(producto.precioFormat,style: TextStyle(fontSize: 28)),
-                                       
-                                       if(!producto.oferta)
-                                       SizedBox(height: 35)
-                                     ],
-                                    )
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                             crossAxisAlignment: CrossAxisAlignment.start,
+                                             mainAxisAlignment: MainAxisAlignment.center,
+                                             children: [
+                                               Text(
+                                               producto.nombre,
+                                               maxLines : 2,
+                                               overflow : TextOverflow.ellipsis,
+                                               softWrap : false,
+                                               style    : TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0)),
+                                               Text(
+                                               producto.descripcion,
+                                               maxLines : 2,
+                                               overflow : TextOverflow.ellipsis,
+                                               softWrap : false,
+                                               style    : TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontSize: 15.0),
+                                               ),
+                                               if(producto.oferta)
+                                               RawChip(
+                                               backgroundColor: Colors.transparent,
+                                               label: Text('Oferta'),
+                                               avatar: Icon(Icons.star_outlined,color: Colors.yellow),
+                                               ),
+                                               Text(producto.precioFormat,style: TextStyle(fontSize: 28)),
+                                               if(!producto.oferta)
+                                               SizedBox(height: 35)
+
+                                             ],
+                                      ),
+                                    ),
+                                    if(cantidad)
+                                    Expanded(
+                                      child: Text(
+                                      'Cant: ${producto.cantidad}',
+                                      maxLines : 2,
+                                      overflow : TextOverflow.ellipsis,
+                                      softWrap : false,
+                                      style    : TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontSize: 18.0),
+                                      ),
+                                    ),
                                   ], 
                        ),
                      ),
                    ),
       ),
-      onTap: () => NavigationService().navigateToRoute(
-         MaterialPageRoute(builder: (context) => ProductoDetallePage(producto: producto))
-      ),
+      onTap: cantidad 
+            ? () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProductoDetallePage(producto: producto)))
+            : () => NavigationService().navigateToRoute(
+                   MaterialPageRoute(builder: (context) => ProductoDetallePage(producto: producto))
+             ),
     );
   }
 }

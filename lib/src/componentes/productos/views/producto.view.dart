@@ -1,7 +1,9 @@
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/pedidos/bloc/pedidos_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/producto.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/cardEmpresa.widget.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/widgets/snack.widged.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_swiper/card_swiper.dart';
@@ -9,9 +11,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProductoDetallePage extends StatelessWidget {
+class ProductoDetallePage extends StatefulWidget {
   final Producto producto;
   const ProductoDetallePage({Key? key,required this.producto}) : super(key: key);
+
+  @override
+  _ProductoDetallePageState createState() => _ProductoDetallePageState();
+}
+
+class _ProductoDetallePageState extends State<ProductoDetallePage> {
+  int cantidad = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +38,22 @@ class ProductoDetallePage extends StatelessWidget {
                              child : Column(
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                              _Imagenes(imagenes: producto.imagenes,empresa: producto.empresa),
+                              _Imagenes(imagenes: widget.producto.imagenes,empresa: widget.producto.empresa),
                                Container(
                                margin  : const EdgeInsets.only(top: 50),
                                padding : const EdgeInsets.all(18),
-                               child   : Text('${producto.nombre}',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))
+                               child   : Text('${widget.producto.nombre}',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))
                                ),
                                Padding(
                                padding : const EdgeInsets.symmetric(horizontal: 18),
-                               child   : Text('${producto.descripcion}',
+                               child   : Text('${widget.producto.descripcion}',
                                          style: TextStyle(
                                                 fontSize   : 18,
                                                 fontWeight : FontWeight.w300
                                          )
                                ),
                                ),
-                                Padding(
+                               Padding(
                                padding : const EdgeInsets.symmetric(horizontal: 18),
                                child   : Row(
                                          mainAxisSize: MainAxisSize.max,
@@ -55,19 +64,22 @@ class ProductoDetallePage extends StatelessWidget {
                                            icon      : Icon(Icons.arrow_left_sharp),
                                            iconSize  : 60,
                                            color     : Theme.of(context).primaryColor,
-                                           onPressed : (){},
+                                           onPressed : (){
+                                             if(cantidad > 1)
+                                             setState(() => cantidad --);
+                                           },
                                            ),
-                                           Text('1',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300)),
+                                           Text('$cantidad',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300)),
                                            IconButton(
                                            icon      : Icon(Icons.arrow_right_sharp),
                                            iconSize  : 60,
                                            color     : Theme.of(context).accentColor,
-                                           onPressed : (){},
+                                           onPressed : () =>  setState(() => cantidad ++),
                                            ),
                                          ],  
                                ),
                                ),
-                               if(producto.oferta)
+                               if(widget.producto.oferta)
                                Padding(
                                padding : const EdgeInsets.symmetric(horizontal: 18),
                                child   : Container(
@@ -87,12 +99,12 @@ class ProductoDetallePage extends StatelessWidget {
                                          ),
                                )
                                ),
-                               if(producto.oferta)
+                               if(widget.producto.oferta)
                                SizedBox(height: 15),
-                               if(producto.oferta)
+                               if(widget.producto.oferta)
                                Padding(
                                padding : const EdgeInsets.symmetric(horizontal: 18),
-                               child   : Text('${producto.descripcionOferta}',style: TextStyle(fontSize: 18,fontWeight: FontWeight.w300)),
+                               child   : Text('${widget.producto.descripcionOferta}',style: TextStyle(fontSize: 18,fontWeight: FontWeight.w300)),
                                ),
                               
                             ],
@@ -112,7 +124,7 @@ class ProductoDetallePage extends StatelessWidget {
                           child: Row(
                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                  children: [
-                                   Text('${producto.precioFormat}',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white)),
+                                   Text('${widget.producto.precioFormat}',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white)),
                                    SizedBox(
                                    height : 40,
                                    width  : 130,
@@ -125,7 +137,16 @@ class ProductoDetallePage extends StatelessWidget {
                                                      shape           : RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                                                      textStyle       : TextStyle(fontSize: 20)
                                             ),
-                                            onPressed: (){},
+                                            onPressed: () {
+                                              final producto = widget.producto.copyWith(cantidad: cantidad);
+                                               context.read<PedidosBloc>().add(AddProductoEvent(producto: producto, id:producto.empresa.id!));
+                                               snacKBar(
+                                               'Producto agregado al carro',
+                                               context,
+                                               action    : 'Ver Carro',
+                                               onPressed : () => NavigationService().navigateTo('pedidos')
+                                               );
+                                            },
                                    ),
                                    )
                                  ],

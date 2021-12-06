@@ -9,6 +9,8 @@ import 'package:appyocomproacacias_refactoring/src/componentes/inicio/cubit/inic
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/data/inicio.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/login/cubit/login.cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/login/data/login.repositorio.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/pedidos/bloc/pedidos_bloc.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/pedidos/data/pedidos.repocitorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/data/productos.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/publicaciones_cubit.dart';
@@ -44,11 +46,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final prefs = PreferenciasUsuario();
   await prefs.initPrefs();
   //prefs.eraseall();
-  DioHttp().initDio('http://192.168.1.5:8000',prefs.token);
+  DioHttp().initDio('http://10.0.2.2:8000',prefs.token);
   final homeCubit = HomeCubit(
                     repositorio  : HomeRepocitorio(),
                     preferencias : PreferenciasUsuario(),
-                    urlImagenes  : 'http://192.168.1.5:8000/imagenes'
+                    urlImagenes  : 'http://10.0.2.2:8000/imagenes'
   );
  homeCubit.stream.firstWhere((state) => state.loading == false).then((value){
      BlocOverrides.runZoned(() {
@@ -77,7 +79,7 @@ class MyApp extends StatelessWidget {
              create: (context) => PublicacionesCubit(repositorio: PublicacionesRepositorio(),prefs:PreferenciasUsuario()),
              ),
              BlocProvider<EmpresasBloc>(
-             lazy: false,
+             //lazy: false,
              create: (context) => EmpresasBloc(repositorio: EmpresaRepositorio(),prefs:PreferenciasUsuario())..add(GetEmpresas(empresas: homeCubit!.state.usuario!.empresas)),
              ),
              BlocProvider<CategoriasBloc>(
@@ -91,6 +93,9 @@ class MyApp extends StatelessWidget {
              ),
              BlocProvider<ProductosBloc>(
              create: (context) => ProductosBloc(repocitorio: ProductosRepositorio(),prefs: PreferenciasUsuario())..add(GetInitialData()),
+             ),
+             BlocProvider<PedidosBloc>(
+             create: (context) => PedidosBloc(repocitorio: PedidoRepocitorio(),prefs: PreferenciasUsuario()),
              ),
            ],
            child: BlocSelector<HomeCubit,HomeState,bool>(

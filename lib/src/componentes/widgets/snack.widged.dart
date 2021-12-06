@@ -14,5 +14,5 @@ void snacKBar(String texto, BuildContext context,
   ScaffoldMessenger.of(context)
       .showSnackBar(snackBar)
       .closed
-      .then((value) => onPressed != null ? onPressed.call() : print(value));
+      .then((value) => onclose != null ? onclose.call() : print(value));
 }

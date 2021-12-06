@@ -39,6 +39,12 @@ class TiendaPage extends StatelessWidget {
                            ],
              ),
             ),
+            floatingActionButton: FloatingActionButton.extended(
+                                  label           : const Text('Carrito',style:TextStyle(color: Colors.white)),
+                                  icon            : Icon(Icons.shopping_cart_outlined,color: Colors.white),
+                                  backgroundColor : Theme.of(context).primaryColor,
+                                  onPressed       : () => NavigationService().navigateTo('pedidos'),
+            ),
            );
   }
 }

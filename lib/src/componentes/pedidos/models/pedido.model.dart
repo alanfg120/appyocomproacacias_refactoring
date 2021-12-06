@@ -1,13 +1,13 @@
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/models/empresa.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/producto.model.dart';
-import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/models/usuario.model.dart';
+import 'package:intl/intl.dart';
 
 class Pedido {
   
 final List<Producto> productos;
 final String observacion,id;
 final Empresa empresa;
-final Usuario usuario;
+final int idUsuario;
 final bool realizado;
 
 
@@ -15,7 +15,7 @@ final bool realizado;
 Pedido({
 required this.id,
 required this.empresa,
-required this.usuario,
+required this.idUsuario,
 required this.observacion,
 required this.productos,
 required this.realizado
@@ -27,18 +27,18 @@ factory Pedido.toJson(Map<String,dynamic> json) =>
         productos   : json['productos'].map<Producto>((producto)=>Producto.toJson(producto)),
         observacion : json['observacion'],
         empresa     : Empresa.toJson(json['empresa']),
-        usuario     : Usuario.toJson(json['usuario']),
+        idUsuario   : json['id_usuario'],
         realizado   : json['realizado']
         ); 
 
 
 Map<String,dynamic> toMap() =>{
-  "id"          : id,
-  "productos"   : productos.map((producto) => producto.toMap()).toList(),
-  "id_empresa"  : empresa.id,
-  "id_usuario"  : usuario.id,
-  "observacion" : observacion,
-  "id_usuario_pedido": empresa.idUsuario
+  "id"                : id,
+  "productos"         : productos.map((producto) => producto.toMap()).toList(),
+  "id_empresa"        : empresa.id,
+  "id_usuario"        : idUsuario,
+  "observacion"       : observacion,
+  "id_usuario_pedido" : empresa.idUsuario
 };
 
 Pedido copyWith({
@@ -46,24 +46,24 @@ Pedido copyWith({
   List<Producto>? productos,
   String? observacion,
   Empresa? empresa,
-  Usuario? usuario,
+  int? idUsuario,
   bool? realizado
 }) => Pedido(
       id          : id          ?? this.id,
       productos   : productos   ?? this.productos,
       empresa     : empresa     ?? this.empresa,
-      usuario     : usuario     ?? this.usuario,
+      idUsuario   : idUsuario   ?? this.idUsuario,
       observacion : observacion ?? this.observacion,
       realizado   : realizado   ?? this.realizado
 );
 
 
-int calcularTotal(){
+String calcularTotal(){
   int total = 0;
   this.productos.forEach((producto) { 
     total = total + (producto.precio * producto.cantidad);
   });
-  return total;
+  return NumberFormat.simpleCurrency(locale: 'en',decimalDigits: 0).format(total);
 }
 
 
