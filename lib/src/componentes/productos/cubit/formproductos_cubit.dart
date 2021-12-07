@@ -42,18 +42,23 @@ class FormProductosCubit extends Cubit<FormProductosState> {
 
   selectCategoria(CategoriaProducto categoria, int index) =>
       emit(state.copyWith(categoria: categoria, categoriaSelecionada: index));
-  
-  getDataUpdate(Producto producto,List<Empresa> empresas,List<CategoriaProducto> categorias){
-     final indexEmpresa   = empresas.indexWhere((e) => e.id == producto.empresa.id);
-     final indexCategoria = categorias.indexWhere((c) => c.id == producto.categoria.id);
-     emit(state.copyWith(
-       empresa: producto.empresa,
-       categoria: producto.categoria,
-       oferta:  producto.oferta,
-       empresaSelecionada: indexEmpresa,
-       categoriaSelecionada: indexCategoria,
-       imagenes: producto.imagenes.map((p) => ImageFile(nombre: p,isaFile: false)).toList() 
-     ));
 
-   }   
+  getDataUpdate(Producto? producto, List<Empresa> empresas,
+      List<CategoriaProducto> categorias) {
+    if (producto != null) {
+      final indexEmpresa =
+          empresas.indexWhere((e) => e.id == producto.empresa.id);
+      final indexCategoria =
+          categorias.indexWhere((c) => c.id == producto.categoria.id);
+      emit(state.copyWith(
+          empresa: producto.empresa,
+          categoria: producto.categoria,
+          oferta: producto.oferta,
+          empresaSelecionada: indexEmpresa,
+          categoriaSelecionada: indexCategoria,
+          imagenes: producto.imagenes
+              .map((p) => ImageFile(nombre: p, isaFile: false))
+              .toList()));
+    }
+  }
 }

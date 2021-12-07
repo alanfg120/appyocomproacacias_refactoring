@@ -1,3 +1,4 @@
+import 'package:appyocomproacacias_refactoring/src/componentes/empresas/bloc/empresas_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/producto.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
@@ -42,7 +43,9 @@ class ProductosPage extends StatelessWidget {
                                    label           : Text('Crear',style: TextStyle(color: Colors.white)),
                                    tooltip         : 'Crea un producto',
                                    onPressed       : () => NavigationService().navigateToRoute(
-                                                             MaterialPageRoute(builder: (context) => FormProducto())
+                                                             MaterialPageRoute(builder: (context) => FormProducto(
+ 
+                                                             ))
                                                      )
                                    ),
     );
@@ -57,6 +60,7 @@ class _EmpresaList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final url = context.read<HomeCubit>().urlImagenes;
+    final empresas = context.read<EmpresasBloc>().state.empresas;
     return Row(
            children: [
               ClipRRect(
@@ -78,8 +82,9 @@ class _EmpresaList extends StatelessWidget {
               color     : Colors.green,
               onPressed : () => NavigationService().navigateToRoute(
                  MaterialPageRoute(builder: (context) =>FormProducto(
-                   update:  true,
-                   producto: producto,
+                   update     :  true,
+                   producto   : producto,
+                 
                  ))
               ) 
               ),

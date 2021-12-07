@@ -5,6 +5,7 @@ import 'package:appyocomproacacias_refactoring/src/componentes/inicio/models/not
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/state/inicio.state.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/response/models/ErrorResponse.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/response/models/error.model.dart';
+import 'package:appyocomproacacias_refactoring/src/recursos/notificationPush.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/shared.service.dart';
 import 'package:bloc/bloc.dart';
 
@@ -38,14 +39,17 @@ class InicioCubit extends Cubit<InicioState> {
         typeUsuario == TipoUsuario.NOT_LODGET) {
       await this._getVideos();
       await this._getTopEmpresas();
+;
     }
     if (!state.initialDataLoaded && typeUsuario == TipoUsuario.LODGET) {
       await this._getVideos();
       await this._getTopEmpresas();
       await this._getNotificaciones();
+      await this._inicialPushNotificacitions();
     }
     if (state.initialDataLoaded && typeUsuario == TipoUsuario.LODGET) {
       await this._getNotificaciones();
+      await this._inicialPushNotificacitions();
     }
   }
 
@@ -90,14 +94,17 @@ class InicioCubit extends Cubit<InicioState> {
     return 0;
   }
 
-  /* void _inicialPushNotificacitions() async {
+
+  
+
+  Future _inicialPushNotificacitions() async {
     
     final pushNotification = PushNotification();
-    pushNotification.init();
+    await pushNotification.init();
+    await _verficarToken();
 
-    pushNotification.onMesaje().onData((data) {
-      //this.notificacionesNoLeidas++;
-      //this.getNotificaciones();
+    pushNotification.onMesaje().onData((data) async {
+      await _getNotificaciones();
     });
 
     pushNotification.onOpenApp().onData((message) {
@@ -114,6 +121,22 @@ class InicioCubit extends Cubit<InicioState> {
        // this._onOpenAppNotification(tipo, idTipo, message.notification!.body);
       }
     });
-  } */
+  }
+
+ Future _verficarToken() async {
+    final token = await PushNotification().getToken();
+    final response = await repocitorio.registrarTokenPush(token, prefs.idUsuario);
+    if(response is InicioResponse){
+       if(response.registroToken!){
+         print('Token actulizado');
+       }
+       if(!response.registroToken!){
+         print('token no ha cambiado');
+       }
+    }
+    if(response is ErrorResponseHttp){
+       print(response.getError);
+    }
+ }
 
 }

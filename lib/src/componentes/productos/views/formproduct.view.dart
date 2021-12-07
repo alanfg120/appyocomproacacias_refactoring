@@ -41,13 +41,11 @@ class FormProducto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('hola');
-    final url = context.read<HomeCubit>().urlImagenes;
-    final categorias = context.read<ProductosBloc>().state.categorias;
-    final empresas = context.read<EmpresasBloc>().state.empresas;
-    if(update)
-     _bloc.getDataUpdate(producto!, empresas, categorias);
 
+    final url = context.read<HomeCubit>().urlImagenes;
+    final empresas = context.read<EmpresasBloc>().state.empresas;
+    final categorias = context.read<ProductosBloc>().state.categorias;
+   
     String nombre       = update ? producto!.nombre            : '';
     String descripcion  = update ? producto!.descripcion       : '';
     String precio       = update ? '${producto!.precio}'       : '';
@@ -55,7 +53,7 @@ class FormProducto extends StatelessWidget {
     
   
     return BlocProvider<FormProductosCubit>(
-           create: (context) => _bloc,
+           create: (context) => _bloc..getDataUpdate(producto, empresas, categorias),
            child: BlocListener<ProductosBloc, ProductosState>(
              listener: (context, state) {
                 if(state.loadingForm)

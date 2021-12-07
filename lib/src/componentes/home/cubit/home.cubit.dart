@@ -71,7 +71,8 @@ class HomeCubit extends Cubit<HomeState> {
       await this._validateLogin();
       emit(state.copyWith(offline: false,loading: false));
    }
-   else emit(state.copyWith(offline: true,loading: false));
+   else await this._validateLogin();
+   emit(state.copyWith(offline: false,loading: false));
   }
 
   Future<bool> _verificationInternet() async {

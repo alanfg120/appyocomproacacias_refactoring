@@ -42,7 +42,10 @@ class PedidosPage extends StatelessWidget {
                             return Column(
                                    children: [
                                      ...state.pedidos.asMap()
-                                             .entries.map((pedido) => _CardPedido(pedido: pedido.value,index: pedido.key))
+                                             .entries.map((pedido){
+                                          
+                                               return _CardPedido(pedido: pedido.value,index: pedido.key);
+                                             })
                                    ],
                             );
                           },
@@ -125,7 +128,7 @@ Widget _listProductos(List<Producto> productos, String url) {
          child  : ListView.separated(
                   separatorBuilder: (_,i) => SizedBox(height: 10),
                   itemCount: productos.length,
-                  itemBuilder: (BuildContext context, int index) {
+                  itemBuilder: (BuildContext context, int i) {
                   return Row(
                          children: [
                            ClipRRect(
@@ -133,7 +136,7 @@ Widget _listProductos(List<Producto> productos, String url) {
                            child: CachedNetworkImage(
                                    height      : 60,
                                    width       : 60,
-                                   imageUrl    : '$url/galeria/${productos[index].imagenes[0]}',
+                                   imageUrl    : '$url/galeria/${productos[i].imagenes[0]}',
                                    placeholder : (context, url) =>  Image.asset('assets/imagenes/load_image.gif'),
                                    errorWidget : (context, url, error) => Image.asset('assets/imagenes/load_no_img.png'),
                                    fit         : BoxFit.cover,
@@ -146,14 +149,14 @@ Widget _listProductos(List<Producto> productos, String url) {
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
                                Text(
-                               '${productos[index].nombre}',
+                               '${productos[i].nombre}',
                                 style: TextStyle(fontSize: 14),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 3,
                                 softWrap: false,
                                ),
                                SizedBox(height: 5),
-                               Text('${productos[index].precioFormat}',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                               Text('${productos[i].precioFormat}',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
                              ],
                              ),
                            ),
@@ -164,19 +167,19 @@ Widget _listProductos(List<Producto> productos, String url) {
                            color     : Theme.of(context).primaryColor,
                               onPressed : () => context.read<PedidosBloc>()
                                                     .add(DeleteCantidadProductoEvent(
-                                                         idProducto: productos[index].id!,
+                                                         idProducto: productos[i].id!,
                                                          indexPedido: index
                                                      )
                                             )
                            ),
-                           Text('${productos[index].cantidad}',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300)),
+                           Text('${productos[i].cantidad}',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300)),
                            IconButton(
                            icon      : Icon(Icons.arrow_right_sharp),
                            iconSize  : 45,
                            color     : Theme.of(context).accentColor,
                            onPressed : () => context.read<PedidosBloc>()
                                                     .add(AddCantidadProductoEvent(
-                                                         idProducto: productos[index].id!,
+                                                         idProducto: productos[i].id!,
                                                          indexPedido: index
                                                      )
                                             )

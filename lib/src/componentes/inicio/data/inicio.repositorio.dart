@@ -71,5 +71,14 @@ class InicioRepositorio {
     }
   }
 
+ Future<ResponseHttp> registrarTokenPush(token, idUsuario) async {
+    FormData data = FormData.fromMap({"id_usuario": idUsuario, "token": token});
+    try {
+      final response = await _dio.put('/usuarios/add/token', data: data);
+      return InicioResponse(registroToken: response.data);
+    } on DioError catch (error) {
+      return ErrorResponseHttp(error);
+    }
+  }
 
 }

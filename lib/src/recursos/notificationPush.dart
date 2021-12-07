@@ -18,7 +18,7 @@ class PushNotification {
 
   PushNotification._internal(this.pushNotification);
 
-  init() async {
+  Future init() async {
     this.settings = await messaging!.requestPermission(
       alert: true,
       announcement: false,
