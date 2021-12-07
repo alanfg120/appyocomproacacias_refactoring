@@ -190,7 +190,7 @@ class _Imagenes extends StatelessWidget {
                        ),
                        ),
                        Align(
-                       alignment : Alignment(0,1.3),
+                       alignment : Alignment(0,1.2),
                        child     : CardEmpresa(empresa: empresa, url: url)
                        ),
                        Positioned(

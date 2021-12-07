@@ -146,8 +146,14 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   ErrorLoginResponse _getTipoError(String error) {
-    return ErrorLoginResponse.values
+    try {
+       final  errorNew = ErrorLoginResponse.values
         .firstWhere((tipo) => tipo.toString().split('.').last == error);
+        return errorNew;
+    } catch (eror) {
+      return ErrorLoginResponse.ERROR_DATA_BASE;
+    }
+    
   }
 
   Future<UserCredential?> _getCredential(SocialAuthType type) async {

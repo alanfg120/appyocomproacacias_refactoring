@@ -40,6 +40,7 @@ class TiendaPage extends StatelessWidget {
              ),
             ),
             floatingActionButton: FloatingActionButton.extended(
+                                  heroTag         : 'tienda',
                                   label           : const Text('Carrito',style:TextStyle(color: Colors.white)),
                                   icon            : Icon(Icons.shopping_cart_outlined,color: Colors.white),
                                   backgroundColor : Theme.of(context).primaryColor,

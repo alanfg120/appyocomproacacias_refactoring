@@ -4,7 +4,7 @@
          <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
          <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="appyocomproacacias_refactoring"
+        android:label="Yo Compro Acacías"
         android:icon="@mipmap/ic_launcher">
           <meta-data android:name="com.facebook.sdk.ApplicationId"
        android:value="@string/facebook_app_id"/>

@@ -207,6 +207,22 @@ class ProductosBloc extends Bloc<ProductosEvent, ProductosState> {
       }
     });
     
+    on<GetProductosByEmpresaEvent>((event, emit) async {
+       if(state.resulProductos.length == 0){
+         emit(state.copyWith(loadingProductos: true));
+         final response = await repocitorio.getProductoByEmpresa(event.idEmpresa);
+         if(response is ResponseProductos){
+           emit(state.copyWith(
+                resulProductos: response.productos,
+                loadingProductos: false
+           ));
+         }
+         if(response is ErrorResponseHttp){
+           print(response.getError);
+         }
+       }
+    });
+    
     on<ProgressEvent>((event, emit) {
       emit(state.copyWith(progress: event.progress));
     });

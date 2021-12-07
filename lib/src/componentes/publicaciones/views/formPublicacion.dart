@@ -46,7 +46,8 @@ class FormPublicacionPage extends StatelessWidget {
     final url = context.read<HomeCubit>().urlImagenes;
     final empresas = context.read<EmpresasBloc>().state.empresas;
 
-  
+    if(update)
+     _bloc.getDataPublicacionUpdate(publicacion!, empresas);
 
     return BlocListener<PublicacionesCubit, PublicacionesState>(
            listener: (context, state) {
@@ -130,11 +131,10 @@ class FormPublicacionPage extends StatelessWidget {
 }
 
 Widget _escogerEmpresa(BuildContext context,List<Empresa> empresas,String url) {
-  print('hola');
   return ListTile(
          leading : Icon(Icons.business),
          title   : BlocBuilder<FormPublicacionesCubit, FormPublicacionesState>(
-                   bloc: _bloc..getDataPublicacionUpdate(publicacion!, empresas),
+                   bloc: _bloc,
                    builder: (context, state) {
                      if(state.selecionada == -1)
                        return Text('Selecione Empresa');
@@ -150,7 +150,7 @@ Widget _escogerEmpresa(BuildContext context,List<Empresa> empresas,String url) {
                                                  url: url,
                                                  bloc:_bloc,
                                                  update: update,
-                                                 publicacion: publicacion!,
+                                                 
                            )
                    )
   );
@@ -162,7 +162,7 @@ Future<bool> _onWillpop(context) async {
       builder: (context) => DialogBack(),
     );
     if(result){
-      await _bloc.deleteFiles();
+      //await _bloc.deleteFiles();
       _bloc.close();
     }
     return result;
@@ -176,15 +176,14 @@ class _Empresas extends StatelessWidget {
   final String url;
   final FormPublicacionesCubit bloc;
   final bool update;
-  final Publicacion publicacion;
+
 
   _Empresas({
      Key? key,
      required this.empresas,
      required this.url,
      required this.bloc,
-     required this.update,
-     required this.publicacion}) : super(key: key);
+     required this.update}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

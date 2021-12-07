@@ -59,3 +59,11 @@ _canLauchUrl(String url) async {
     throw 'Could not launch $url';
   }
 }
+
+ void goToPolitica() async {
+    if (await canLaunch('https://yocomproacacias.com/politicas')) {
+      await launch('https://yocomproacacias.com/politicas');
+    } else {
+      throw 'Could not launch';
+    }
+  }

@@ -9,7 +9,10 @@ import 'package:appyocomproacacias_refactoring/src/componentes/empresas/widgets/
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/widgets/loadingsEmpresa.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/models/usuario.enum.dart';
-import 'package:appyocomproacacias_refactoring/src/componentes/productos/widgets/productoCardSmall.widget.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/data/productos.repositorio.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/widgets/cardProducto.widget.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/widgets/loadingProductos.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/publicaciones_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/widget/publicacion.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/InputForm.widget.dart';
@@ -53,11 +56,12 @@ class _PerfilEmpresaPageState extends State<PerfilEmpresaPage> {
         final homeState = context.read<HomeCubit>().state;
         final url = homeState.url;
         final TipoUsuario usuario = homeState.currentUsuario;
-        context.read<EmpresasBloc>().add(
-           RegistarVisitaEmpresaEvent(
-           idEmpresa: widget.empresa.id!
-           )
-        );
+        if(homeState.currentUsuario == TipoUsuario.LODGET)
+          context.read<EmpresasBloc>().add(
+             RegistarVisitaEmpresaEvent(
+             idEmpresa: widget.empresa.id!
+             )
+          );
 
         return AnnotatedRegion<SystemUiOverlayStyle>(
                value: SystemUiOverlayStyle(
@@ -89,7 +93,7 @@ class _PerfilEmpresaPageState extends State<PerfilEmpresaPage> {
                                                                     ),
                                                                     _CalificacionesEmpresa(url: url),
                                                                     if(usuario == TipoUsuario.LODGET)
-                                                                    _ProductosEmpresa(url: url)
+                                                                    _ProductosEmpresa(url: url,idEmpresa: widget.empresa.id!)
                                                        ],
                                                        onPageChanged: (pagina){
                                                          bloc.selectPagina(pagina);
@@ -439,39 +443,8 @@ class _CalificacionesEmpresa extends StatelessWidget {
   }
 }
 
-class _ProductosEmpresa extends StatelessWidget {
 
-  final String url;
-  const _ProductosEmpresa({Key? key,required this.url}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<PerfilEmpresaCubit,PerfilEmpresaState>(
-           builder: (context,state){
-            if(state.loading)
-              return Center(child: CircularProgressIndicator());
-            if(state.productos.length == 0)
-              return Center(child: const Text('No hay Productos'));
-            return GridView.builder(
-                    padding      : EdgeInsets.symmetric(horizontal: 15,vertical: 30),
-                    itemCount    : state.productos.length,
-                    gridDelegate : SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,crossAxisSpacing: 10),
-                    itemBuilder  : (_, index){
-                      return  GestureDetector(
-                              child : ProductoCardSmall(producto: state.productos[index],url: url),
-                              onTap : () {
-                                /*    Get.to(ProductoPage());
-                                   state.getProductosByEmpresa(state.productos[index].empresa.id);
-                                   Get.find<ProductosController>().selectProducto(state.productos[index]); */
-                              }
-                      );
-                    },
-         
-            );
-           }
-    );
-  }
-}
 
 class _DialogCalificar extends StatelessWidget {
   final Empresa empresa;
@@ -550,4 +523,35 @@ class _DialogCalificar extends StatelessWidget {
             ],
     );
   }
+}
+
+class _ProductosEmpresa extends StatelessWidget {  
+
+  final int idEmpresa;
+  final String url;
+  const _ProductosEmpresa(
+         {Key? key,
+          required this.idEmpresa,
+          required this.url}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProductosBloc,ProductosState>(
+             bloc: ProductosBloc(repocitorio: ProductosRepositorio(), prefs: PreferenciasUsuario())
+                   ..add(GetProductosByEmpresaEvent(idEmpresa)),
+             builder: (context,state){
+             if(state.loadingProductos)
+                return LoadingSearchProductos();
+              if(state.resulProductos.length == 0)
+                return Center(child: const Text('No hay productos'));
+              return ListView.builder(
+                     padding: EdgeInsets.all(10),
+                     itemCount: state.resulProductos.length,
+                     itemBuilder: (contex,i){
+                      return CardProducto(producto: state.resulProductos[i], url: url);
+                     }
+                     );
+             },
+    );
+}
 }

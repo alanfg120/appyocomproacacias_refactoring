@@ -63,7 +63,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   bloc_test: ^9.0.0
-  mockito: 
+  mockito:
+  flutter_launcher_icons: "^0.9.2"
+flutter_icons:
+  ios: true
+  image_path: "assets/imagenes/icon_ios.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

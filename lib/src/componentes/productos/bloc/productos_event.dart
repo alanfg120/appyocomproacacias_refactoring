@@ -34,6 +34,12 @@ class GetProductosByCategoriaEvent extends ProductosEvent {
   @override
   List<Object?> get props => [idCategoria];
 }
+class GetProductosByEmpresaEvent extends ProductosEvent {
+  final int idEmpresa;
+  GetProductosByEmpresaEvent(this.idEmpresa);
+  @override
+  List<Object?> get props => [idEmpresa];
+}
 
 class AddProductoEvent extends ProductosEvent {
   final Producto producto;

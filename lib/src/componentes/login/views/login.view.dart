@@ -9,6 +9,7 @@ import 'package:appyocomproacacias_refactoring/src/componentes/login/widgets/but
 import 'package:appyocomproacacias_refactoring/src/componentes/login/widgets/button_google.widget.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/widgets/snack.widged.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
+import 'package:appyocomproacacias_refactoring/src/recursos/url_laucher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -82,7 +83,8 @@ class LoginPage extends StatelessWidget {
                   color: Colors.blue),
             ),
           ),
-          onTap: () {}),
+          onTap: () => goToPolitica()
+      ),
     );
   }
 }

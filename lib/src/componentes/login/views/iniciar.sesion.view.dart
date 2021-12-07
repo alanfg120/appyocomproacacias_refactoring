@@ -1,6 +1,7 @@
 import 'dart:io';
 
 
+import 'package:appyocomproacacias_refactoring/src/componentes/empresas/bloc/empresas_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/models/socialAuth.enum.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/login/cubit/login.cubit.dart';
@@ -47,6 +48,7 @@ class LoginFormPage extends StatelessWidget {
                         if(state.logiado){
                           context.read<HomeCubit>().updateUsuario(state.usuario);
                           context.read<UsuarioCubit>().updateUsuario(state.usuario!);
+                          context.read<EmpresasBloc>().add(GetEmpresas(empresas: state.usuario!.empresas));
                           NavigationService().back();
                         }
                         _snacKBarError(state.error,context);
