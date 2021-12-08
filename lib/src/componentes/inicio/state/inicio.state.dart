@@ -11,6 +11,7 @@ class InicioState extends Equatable {
   final List<Notificacion> notificaciones;
   final Notificacion? notificacion;
   final int notificacionesNoLeidas;
+  final bool pushNoticacion;
 
   InicioState(
      {this.notificacion,
@@ -19,16 +20,19 @@ class InicioState extends Equatable {
       required this.initialDataLoaded,
       required this.empresas,
       required this.notificaciones,
-      required this.notificacionesNoLeidas});
+      required this.notificacionesNoLeidas,
+      required this.pushNoticacion});
 
   factory InicioState.initial() =>
       InicioState(
-      loading                : true, 
+      loading                : true,
+      initialDataLoaded      : false,
+      pushNoticacion         : false,
       videos                 : [],
       empresas               : [], 
       notificaciones         : [],
       notificacionesNoLeidas : 0,
-      initialDataLoaded      : false
+     
   );
 
   InicioState copyWith(
@@ -38,7 +42,8 @@ class InicioState extends Equatable {
            List<Notificacion>? notificaciones,
            Notificacion? notificacion,
            int? notificacionesNoLeidas,
-           bool? initialDataLoaded}) {
+           bool? initialDataLoaded,
+           bool? pushNoticacion}) {
              return InicioState(
                     loading                : loading                ?? this.loading,
                     videos                 : videos                 ?? this.videos,
@@ -46,7 +51,8 @@ class InicioState extends Equatable {
                     notificaciones         : notificaciones         ?? this.notificaciones,
                     notificacionesNoLeidas : notificacionesNoLeidas ?? this.notificacionesNoLeidas,
                     initialDataLoaded      : initialDataLoaded      ?? this.initialDataLoaded,
-                    notificacion           : notificacion           ?? this.notificacion
+                    notificacion           : notificacion           ?? this.notificacion,
+                    pushNoticacion         : pushNoticacion         ?? this.pushNoticacion
              );
           }
 
@@ -59,5 +65,6 @@ class InicioState extends Equatable {
        empresas,
        notificaciones,
        notificacionesNoLeidas,
-       notificacion];
+       notificacion,
+       pushNoticacion];
 }

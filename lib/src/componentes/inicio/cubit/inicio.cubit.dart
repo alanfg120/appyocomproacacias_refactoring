@@ -38,7 +38,6 @@ class InicioCubit extends Cubit<InicioState> {
         typeUsuario == TipoUsuario.NOT_LODGET) {
       await this._getVideos();
       await this._getTopEmpresas();
-      
     }
     if (!state.initialDataLoaded && typeUsuario == TipoUsuario.LODGET) {
       await this._getVideos();
@@ -97,15 +96,21 @@ class InicioCubit extends Cubit<InicioState> {
     await _verficarToken();
 
     pushNotification.onMesaje().onData((data) async {
-      emit(state.copyWith(notificacion: _getNotificacion(data)));
       await _getNotificaciones();
     });
 
     pushNotification.onOpenApp().onData((message) async {
-      emit(state.copyWith(notificacion: _getNotificacion(message)));
+      emit(state.copyWith(
+          notificacion: _getNotificacion(message), pushNoticacion: true));
       await _getNotificaciones();
+      emit(state.copyWith(pushNoticacion: false));
     });
-    pushNotification.onBackground().then((message) {});
+    pushNotification.onBackground().then((message) async {
+      emit(state.copyWith(
+          notificacion: _getNotificacion(message), pushNoticacion: true));
+      await _getNotificaciones();
+      emit(state.copyWith(pushNoticacion: false));
+    });
   }
 
   Future _verficarToken() async {

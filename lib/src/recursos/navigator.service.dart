@@ -23,6 +23,12 @@ class NavigationService {
   Future<dynamic> navigateToRoute(MaterialPageRoute _rn) {
     return navigationKey.currentState!.push(_rn);
   }
+  Future<dynamic> navigateToRouteReplace(MaterialPageRoute _rn) {
+    return navigationKey.currentState!.pushReplacement(_rn);
+  }
+  Future<dynamic> navigateToRouteReplaceUntil(MaterialPageRoute _rn) {
+    return navigationKey.currentState!.pushAndRemoveUntil(_rn, (route) => false);
+  }
 
   back() {
     return navigationKey.currentState!.pop();

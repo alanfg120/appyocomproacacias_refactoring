@@ -29,13 +29,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<InicioCubit, InicioState>(
       listener: (context, state) {
-        NavigationService().navigateToRoute(
+        if(state.notificacion != null && state.pushNoticacion)
+            NavigationService().navigateToRoute(
         MaterialPageRoute(builder: (context) 
         => DetalleNotificacion(notification: state.notificacion!))
         );
       },
-      listenWhen: (previusState,state) 
-                =>previusState.notificacion!.tipo != state.notificacion!.tipo,
+      listenWhen: (previusState,state) => previusState.pushNoticacion != state.pushNoticacion,          
       child: BlocBuilder<HomeCubit,HomeState>(
                builder: (contex,state) {
                           return Scaffold(

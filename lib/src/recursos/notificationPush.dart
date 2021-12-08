@@ -30,10 +30,15 @@ class PushNotification {
     );
     await messaging!.setForegroundNotificationPresentationOptions(
         alert: false, badge: true, sound: true);
+    await topic('usuarios');
   }
 
   Future<String?> getToken() async {
     return await messaging!.getToken();
+  }
+
+  Future topic(String topic) async {
+    return await messaging!.subscribeToTopic(topic);
   }
 
   StreamSubscription<RemoteMessage> onMesaje() {
