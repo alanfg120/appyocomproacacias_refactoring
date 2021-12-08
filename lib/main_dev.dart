@@ -9,8 +9,15 @@ import 'package:appyocomproacacias_refactoring/src/componentes/inicio/cubit/inic
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/data/inicio.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/login/cubit/login.cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/login/data/login.repositorio.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/pedidos/bloc/pedidos_bloc.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/pedidos/data/pedidos.repocitorio.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/productos/data/productos.repositorio.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/publicaciones_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/data/publicaciones.repositorio.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/cubit/usuario_cubit.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/data/usuario.repository.dart';
+import 'package:appyocomproacacias_refactoring/src/recursos/bloc.observer.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/dio.singleton.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
 import 'package:appyocomproacacias_refactoring/src/recursos/routes.dart';
@@ -32,21 +39,25 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
  main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //Bloc.observer = MyBlocObserver();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   Intl.defaultLocale = 'es_ES';
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final prefs = PreferenciasUsuario();
   await prefs.initPrefs();
-  prefs.eraseall();
-  DioHttp().initDio('http://localhost:8000',prefs.token);
-final homeCubit = HomeCubit(
-                  repositorio  : HomeRepocitorio(),
-                  preferencias : PreferenciasUsuario(),
-                  urlImagenes  : 'http://localhost:8000/imagenes'
+  //prefs.eraseall();
+  DioHttp().initDio('http://10.0.2.2:8000',prefs.token);
+  final homeCubit = HomeCubit(
+                    repositorio  : HomeRepocitorio(),
+                    preferencias : PreferenciasUsuario(),
+                    urlImagenes  : 'http://10.0.2.2:8000/imagenes'
   );
-        homeCubit.stream.firstWhere((state) => state.loading == false).then((value) =>runApp(MyApp(homeCubit: homeCubit)));
+ homeCubit.stream.firstWhere((state) => state.loading == false).then((value){
+     BlocOverrides.runZoned(() async {
+        await homeCubit.validateInternet();
+         runApp(MyApp(homeCubit: homeCubit));
+     },blocObserver: MyBlocObserver());
+ });
   await homeCubit.validateInternet();
 }
 
@@ -59,24 +70,35 @@ class MyApp extends StatelessWidget {
   
     return MultiBlocProvider(
            providers: [
-             BlocProvider(
+             BlocProvider<LoginCubit>(
              create: (context) => LoginCubit(repositorio: LoginRepositorio(),prefs: PreferenciasUsuario())
              ),
-             BlocProvider(
-             create: (context) => InicioCubit(repocitorio: InicioRepositorio(),prefs:PreferenciasUsuario()),
+             BlocProvider<InicioCubit>(
+             create: (context) => InicioCubit(repocitorio: InicioRepositorio(),prefs:PreferenciasUsuario())..inicialPushNotificacitions(),
              ),
-             BlocProvider(
+             BlocProvider<PublicacionesCubit>(
              create: (context) => PublicacionesCubit(repositorio: PublicacionesRepositorio(),prefs:PreferenciasUsuario()),
              ),
-             BlocProvider(
-             create: (context) => EmpresasBloc(repositorio: EmpresaRepositorio(),prefs:PreferenciasUsuario()),
+             BlocProvider<EmpresasBloc>(
+             //lazy: false,
+             create: (context) => EmpresasBloc(repositorio: EmpresaRepositorio(),prefs:PreferenciasUsuario())..add(GetEmpresas(empresas: homeCubit!.state.usuario!.empresas)),
              ),
-             BlocProvider(
-             create: (context) => CategoriasBloc(CategoriaRepositorio()),
+             BlocProvider<CategoriasBloc>(
+             create: (context) => CategoriasBloc(CategoriaRepositorio())..add(GetCategoriasEvent()),
              ),
              BlocProvider.value(
              value: homeCubit!
-             )
+             ),
+             BlocProvider<UsuarioCubit>(
+             create: (context) => UsuarioCubit(usuario: homeCubit!.state.usuario!,repocitorio: UsuarioRepocitorio()),
+             ),
+             BlocProvider<ProductosBloc>(
+             create: (context) => ProductosBloc(repocitorio: ProductosRepositorio(),prefs: PreferenciasUsuario())..add(GetInitialData()),
+             ),
+             BlocProvider<PedidosBloc>(
+             //lazy:  false,
+             create: (context) => PedidosBloc(repocitorio: PedidoRepocitorio(),prefs: PreferenciasUsuario()),
+             ),
            ],
            child: BlocSelector<HomeCubit,HomeState,bool>(
              selector: (state) => state.offline,

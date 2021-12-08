@@ -38,9 +38,9 @@ android {
         applicationId "dosve.alcaldia.yocomproacacias"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
-         multiDexEnabled true
+        versionCode 10057
+        versionName '7.0.0'
+        multiDexEnabled true
     }
 
     buildTypes {

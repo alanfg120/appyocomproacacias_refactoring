@@ -46,11 +46,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final prefs = PreferenciasUsuario();
   await prefs.initPrefs();
   //prefs.eraseall();
-  DioHttp().initDio('http://10.0.2.2:8000',prefs.token);
+  DioHttp().initDio('https://api.yocomproacacias.com',prefs.token);
   final homeCubit = HomeCubit(
                     repositorio  : HomeRepocitorio(),
                     preferencias : PreferenciasUsuario(),
-                    urlImagenes  : 'http://10.0.2.2:8000/imagenes'
+                    urlImagenes  : 'https://api.yocomproacacias.com/imagenes'
   );
  homeCubit.stream.firstWhere((state) => state.loading == false).then((value){
      BlocOverrides.runZoned(() async {
