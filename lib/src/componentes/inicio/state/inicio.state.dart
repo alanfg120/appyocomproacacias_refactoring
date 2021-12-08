@@ -9,10 +9,12 @@ class InicioState extends Equatable {
   final List<YouTubeVideoView> videos;
   final List<Empresa> empresas;
   final List<Notificacion> notificaciones;
+  final Notificacion? notificacion;
   final int notificacionesNoLeidas;
 
   InicioState(
-     {required this.loading,
+     {this.notificacion,
+      required this.loading,
       required this.videos,
       required this.initialDataLoaded,
       required this.empresas,
@@ -34,6 +36,7 @@ class InicioState extends Equatable {
            List<YouTubeVideoView>? videos,
            List<Empresa>? empresas,
            List<Notificacion>? notificaciones,
+           Notificacion? notificacion,
            int? notificacionesNoLeidas,
            bool? initialDataLoaded}) {
              return InicioState(
@@ -42,7 +45,8 @@ class InicioState extends Equatable {
                     empresas               : empresas               ?? this.empresas,
                     notificaciones         : notificaciones         ?? this.notificaciones,
                     notificacionesNoLeidas : notificacionesNoLeidas ?? this.notificacionesNoLeidas,
-                    initialDataLoaded      : initialDataLoaded      ?? this.initialDataLoaded
+                    initialDataLoaded      : initialDataLoaded      ?? this.initialDataLoaded,
+                    notificacion           : notificacion           ?? this.notificacion
              );
           }
 
@@ -54,5 +58,6 @@ class InicioState extends Equatable {
        initialDataLoaded,
        empresas,
        notificaciones,
-       notificacionesNoLeidas];
+       notificacionesNoLeidas,
+       notificacion];
 }

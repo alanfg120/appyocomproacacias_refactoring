@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
              create: (context) => LoginCubit(repositorio: LoginRepositorio(),prefs: PreferenciasUsuario())
              ),
              BlocProvider<InicioCubit>(
-             create: (context) => InicioCubit(repocitorio: InicioRepositorio(),prefs:PreferenciasUsuario()),
+             create: (context) => InicioCubit(repocitorio: InicioRepositorio(),prefs:PreferenciasUsuario())..inicialPushNotificacitions(),
              ),
              BlocProvider<PublicacionesCubit>(
              create: (context) => PublicacionesCubit(repositorio: PublicacionesRepositorio(),prefs:PreferenciasUsuario()),

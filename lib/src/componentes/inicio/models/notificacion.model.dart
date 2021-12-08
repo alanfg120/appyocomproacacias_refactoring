@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 class Notificacion  extends Equatable {
   
-  final int id;
+  final int? id;
   final Usuario? usuario;
   final String titulo, mensaje, fecha;
   final NotificacionTipo tipo;
@@ -13,7 +13,7 @@ class Notificacion  extends Equatable {
 
   Notificacion(
       {
-      required this.id,
+      this.id,
       this.usuario,
       required this.titulo,
       required this.mensaje,
@@ -24,7 +24,7 @@ class Notificacion  extends Equatable {
       this.idEmpresa});
 
   factory Notificacion.toJson(Map<String, dynamic> json) => Notificacion(
-        id            : json['id'],
+        id            : json['id'] ?? -1,
         usuario       : json['usuario_remitente'] != null
                         ? Usuario.toJson(json['usuario_remitente'])
                         : null,

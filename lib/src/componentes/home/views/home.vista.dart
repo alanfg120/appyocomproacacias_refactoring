@@ -1,18 +1,20 @@
 
-import 'package:appyocomproacacias_refactoring/src/componentes/categorias/bloc/categorias_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/categorias/views/categorias.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/empresas/bloc/empresas_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.state.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/models/usuario.enum.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/cubit/inicio.cubit.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/inicio/state/inicio.state.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/inicio/views/inicio.view.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/inicio/views/notificacionesDetalles.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/login/views/login.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/views/tienda.view.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/cubit/publicaciones_cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/publicaciones/views/publicaciones.page.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/usuarios/views/usuario.view.dart';
+import 'package:appyocomproacacias_refactoring/src/recursos/navigator.service.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,26 +27,36 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit,HomeState>(
-           builder: (contex,state) {
-                      return Scaffold(
-                             body     : IndexedStack(
-                                        index    : state.page,
-                                        children : <Widget>[
-                                                   if(state.currentUsuario == TipoUsuario.ANONYMOUS || state.currentUsuario == TipoUsuario.NOT_LODGET) 
-                                                   LoginPage(),
-                                                   InicioPage(),
-                                                   if(state.currentUsuario == TipoUsuario.LODGET)
-                                                   TiendaPage(),
-                                                   PublicacionesPage(),
-                                                   CategoriasPage(),
-                                                   if(state.currentUsuario == TipoUsuario.LODGET)
-                                                   UsuarioOptios()
-                                                  ],
-                                        ),
-                                        bottomNavigationBar: _buttomBarNavigator(state,context)
-          );
-        });
+    return BlocListener<InicioCubit, InicioState>(
+      listener: (context, state) {
+        NavigationService().navigateToRoute(
+        MaterialPageRoute(builder: (context) 
+        => DetalleNotificacion(notification: state.notificacion!))
+        );
+      },
+      listenWhen: (previusState,state) 
+                =>previusState.notificacion!.tipo != state.notificacion!.tipo,
+      child: BlocBuilder<HomeCubit,HomeState>(
+               builder: (contex,state) {
+                          return Scaffold(
+                                 body     : IndexedStack(
+                                            index    : state.page,
+                                            children : <Widget>[
+                                                       if(state.currentUsuario == TipoUsuario.ANONYMOUS || state.currentUsuario == TipoUsuario.NOT_LODGET) 
+                                                       LoginPage(),
+                                                       InicioPage(),
+                                                       if(state.currentUsuario == TipoUsuario.LODGET)
+                                                       TiendaPage(),
+                                                       PublicacionesPage(),
+                                                       CategoriasPage(),
+                                                       if(state.currentUsuario == TipoUsuario.LODGET)
+                                                       UsuarioOptios()
+                                                      ],
+                                            ),
+                                            bottomNavigationBar: _buttomBarNavigator(state,context)
+              );
+            }),
+    );
   }
 
   _buttomBarNavigator (HomeState state, BuildContext context) {

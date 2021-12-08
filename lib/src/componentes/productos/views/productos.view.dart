@@ -1,4 +1,3 @@
-import 'package:appyocomproacacias_refactoring/src/componentes/empresas/bloc/empresas_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/bloc/productos_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/productos/models/producto.model.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
@@ -60,7 +59,6 @@ class _EmpresaList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final url = context.read<HomeCubit>().urlImagenes;
-    final empresas = context.read<EmpresasBloc>().state.empresas;
     return Row(
            children: [
               ClipRRect(
@@ -107,7 +105,7 @@ class _DialogoDelete extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
            shape   : RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-           title   : Text('Eliminar Empresa'),
+           title   : Text('Eliminar Producto'),
            content : BlocConsumer<ProductosBloc, ProductosState>(
                      listener: (context,state){
                        if(!state.loadingDelete)

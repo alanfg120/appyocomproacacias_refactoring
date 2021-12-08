@@ -59,7 +59,7 @@ class NotificationPage extends StatelessWidget {
                                                     ],
                                           ),
                                           onTap: (){
-                                           context.read<InicioCubit>().leerNotificacion(notificaciones[i].id);
+                                           context.read<InicioCubit>().leerNotificacion(notificaciones[i].id!);
                                            NavigationService().navigateToRoute(
                                              MaterialPageRoute(builder: (context) => DetalleNotificacion(notification: notificaciones[i]))
                                            );
