@@ -4,19 +4,19 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 class PushNotification {
 
-  FirebaseMessaging? messaging = FirebaseMessaging.instance;
+  final FirebaseMessaging? messaging;
   NotificationSettings? settings;
 
-  final PushNotification pushNotification;
+
 
   static final PushNotification _instancia =
-      new PushNotification._internal(PushNotification());
+      new PushNotification._internal(FirebaseMessaging.instance);
 
   factory PushNotification() {
     return _instancia;
   }
 
-  PushNotification._internal(this.pushNotification);
+  PushNotification._internal(this.messaging);
 
   Future init() async {
     this.settings = await messaging!.requestPermission(

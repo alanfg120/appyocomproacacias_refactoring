@@ -46,86 +46,87 @@ class FormPublicacionPage extends StatelessWidget {
     final url = context.read<HomeCubit>().urlImagenes;
     final empresas = context.read<EmpresasBloc>().state.empresas;
 
-    if(update)
-     _bloc.getDataPublicacionUpdate(publicacion!, empresas);
 
-    return BlocListener<PublicacionesCubit, PublicacionesState>(
-           listener: (context, state) {
-             if(state.loadingAdd){
-               dialogLoading(context, 'Publicando',true);
-             }
-             if(!state.loadingAdd ){
-               NavigationService().back();
-             }
-         },
-      listenWhen:(previusState,state){
-        return previusState.loadingAdd != state.loadingAdd;
-      },
-      child: WillPopScope(
-             onWillPop : () async => _onWillpop(context),
-             child     : GestureDetector(
-                         child:  Scaffold(
-                                 appBar: AppBar(
-                                 title     : Text('${update ? 'Actuliza' : 'Agregar'} tu Publicación'),
-                                 elevation : 0,
-                                 ),
-                         body  : SingleChildScrollView(
-                                padding : EdgeInsets.all(20),
-                                child   : Form(
-                                          key   : formKey,
-                                          child : Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                       InputForm(
-                                                       placeholder : 'Escribe Tu publicación',
-                                                       textarea    : true,
-                                                       requerido   : true,
-                                                       initialValue: textoForm,
-                                                       onChanged   : (texto)=> textoForm = texto,
-                                                       ),
-                                                       _escogerEmpresa(context,empresas,url),
-                                                       SizedBox(height: 10),
-                                                       Text('Imagenes (máximo 5)'),
-                                                       SizedBox(height: 10),
-                                                       _Imagenes(bloc: _bloc,url: url)
-                                                  ]
-                                          )
-                                ),
-                         ),
-                         floatingActionButton: FloatingActionButton.extended(
-                                               heroTag         : 'publicar',
-                                               backgroundColor : Theme.of(context).primaryColor,
-                                               icon            : Icon(Icons.add,color: Colors.white),
-                                               label           : Text('${update ? 'Actualizar' : 'Publicar'}',style:TextStyle(color: Colors.white)),
-                                               onPressed       : () async {
-                                                 if(formKey.currentState!.validate() 
-                                                    && _bloc.state.imagenes.length > 0 
-                                                    && _bloc.state.empresa != null){
-                                                     final publicacion = Publicacion(
-                                                                         id      : update ? this.publicacion!.id : null,
-                                                                         editar  : true,
-                                                                         empresa : _bloc.state.empresa!,
-                                                                         imagenes: _bloc.state.imagenes.map((i) => i.nombre).toList(),
-                                                                         megusta : update ? this.publicacion!.megusta : false,
-                                                                         texto   : textoForm,
-                                                                         fecha   : DateTime.now().toIso8601String(),
-                                                                         comentarios  : update ? this.publicacion!.comentarios   : [],
-                                                                         usuariosLike : update ? this.publicacion!.usuariosLike  : []
-                                                     );
-                                                     if(!update)
-                                                     await context.read<PublicacionesCubit>().addPublicacion(publicacion,_bloc.state.imagenes);
-                                                     if(update)
-                                                     await context.read<PublicacionesCubit>().updatePublicacion(publicacion,_bloc.state.imagenes,url,isEmpresa);
-                                                     NavigationService().back();
-                                                 }
-                                                 else snacKBar('Faltan Datos', context);
-                                               }
-                         ),
+    return BlocProvider<FormPublicacionesCubit>(
+      create: (context) => _bloc..getDataPublicacionUpdate(publicacion, empresas),
+      child: BlocListener<PublicacionesCubit, PublicacionesState>(
+               listener: (context, state) {
+                 if(state.loadingAdd){
+                   dialogLoading(context, 'Publicando',true);
+                 }
+                 if(!state.loadingAdd ){
+                   NavigationService().back();
+                 }
+             },
+          listenWhen:(previusState,state){
+            return previusState.loadingAdd != state.loadingAdd;
+          },
+          child: WillPopScope(
+                 onWillPop : () async => _onWillpop(context),
+                 child     : GestureDetector(
+                             child:  Scaffold(
+                                     appBar: AppBar(
+                                     title     : Text('${update ? 'Actuliza' : 'Agregar'} tu Publicación'),
+                                     elevation : 0,
+                                     ),
+                             body  : SingleChildScrollView(
+                                    padding : EdgeInsets.all(20),
+                                    child   : Form(
+                                              key   : formKey,
+                                              child : Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                           InputForm(
+                                                           placeholder : 'Escribe Tu publicación',
+                                                           textarea    : true,
+                                                           requerido   : true,
+                                                           initialValue: textoForm,
+                                                           onChanged   : (texto)=> textoForm = texto,
+                                                           ),
+                                                           _escogerEmpresa(context,empresas,url),
+                                                           SizedBox(height: 10),
+                                                           Text('Imagenes (máximo 5)'),
+                                                           SizedBox(height: 10),
+                                                           _Imagenes(bloc: _bloc,url: url)
+                                                      ]
+                                              )
+                                    ),
+                             ),
+                             floatingActionButton: FloatingActionButton.extended(
+                                                   heroTag         : 'publicar',
+                                                   backgroundColor : Theme.of(context).primaryColor,
+                                                   icon            : Icon(Icons.add,color: Colors.white),
+                                                   label           : Text('${update ? 'Actualizar' : 'Publicar'}',style:TextStyle(color: Colors.white)),
+                                                   onPressed       : () async {
+                                                     if(formKey.currentState!.validate() 
+                                                        && _bloc.state.imagenes.length > 0 
+                                                        && _bloc.state.empresa != null){
+                                                         final publicacion = Publicacion(
+                                                                             id      : update ? this.publicacion!.id : null,
+                                                                             editar  : true,
+                                                                             empresa : _bloc.state.empresa!,
+                                                                             imagenes: _bloc.state.imagenes.map((i) => i.nombre).toList(),
+                                                                             megusta : update ? this.publicacion!.megusta : false,
+                                                                             texto   : textoForm,
+                                                                             fecha   : DateTime.now().toIso8601String(),
+                                                                             comentarios  : update ? this.publicacion!.comentarios   : [],
+                                                                             usuariosLike : update ? this.publicacion!.usuariosLike  : []
+                                                         );
+                                                         if(!update)
+                                                         await context.read<PublicacionesCubit>().addPublicacion(publicacion,_bloc.state.imagenes);
+                                                         if(update)
+                                                         await context.read<PublicacionesCubit>().updatePublicacion(publicacion,_bloc.state.imagenes,url,isEmpresa);
+                                                         NavigationService().back();
+                                                     }
+                                                     else snacKBar('Faltan Datos', context);
+                                                   }
+                             ),
+                     ),
+                         
+                         
+                  onTap: ()=>FocusScope.of(context).requestFocus(blankNode)
                  ),
-                     
-                     
-              onTap: ()=>FocusScope.of(context).requestFocus(blankNode)
-             ),
+            ),
         ),
     );
 }
@@ -157,15 +158,17 @@ Widget _escogerEmpresa(BuildContext context,List<Empresa> empresas,String url) {
 }
 
 Future<bool> _onWillpop(context) async {
-   final result =  await showDialog(
+   final bool? result =  await showDialog(
       context: context,
       builder: (context) => DialogBack(),
     );
-    if(result){
+    if(result != null){
+      if(result){
       //await _bloc.deleteFiles();
       _bloc.close();
     }
-    return result;
+    }
+    return result ?? false;
   }
 
 }

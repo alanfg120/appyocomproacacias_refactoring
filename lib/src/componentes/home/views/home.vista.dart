@@ -1,5 +1,7 @@
 
+import 'package:appyocomproacacias_refactoring/src/componentes/categorias/bloc/categorias_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/categorias/views/categorias.view.dart';
+import 'package:appyocomproacacias_refactoring/src/componentes/empresas/bloc/empresas_bloc.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.cubit.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/cubit/home.state.dart';
 import 'package:appyocomproacacias_refactoring/src/componentes/home/models/usuario.enum.dart';
@@ -105,7 +107,11 @@ class HomePage extends StatelessWidget {
    if(usuario == TipoUsuario.LODGET){
      if(index == 0) context.read<InicioCubit>().getDataInitial(homeCubit.state.currentUsuario);
      if(index == 1) context.read<ProductosBloc>().add(GetInitialData());
-     if(index == 2) context.read<PublicacionesCubit>().getInitiData();
+     if(index == 2) {
+       context.read<PublicacionesCubit>().getInitiData();
+       context.read<EmpresasBloc>().add(GetEmpresas(empresas: homeCubit.state.usuario!.empresas));
+
+     }
    }
   }
 
