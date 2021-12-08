@@ -443,7 +443,15 @@ class _Empresas extends StatelessWidget {
                                  ),
                       ),
                       title    : Text('${empresas[index].nombre}'), 
-                      onTap    : () => bloc.selectEmpresa(empresas[index],index),
+                      onTap    : (){
+                        if(empresas[index].estado){
+                           bloc.selectEmpresa(empresas[index],index);
+                        }
+                        else {
+                          NavigationService().back();
+                          snacKBar('Empresa no Autorizada', context);
+                        }
+                      },
                       trailing : selecionada == index
                                  ? Icon(Icons.check_box,color: Colors.green)
                                  : null
